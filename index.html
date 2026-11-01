@@ -67,6 +67,7 @@ body{background:var(--page,var(--bg));background-attachment:fixed}
 .srow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line)}.about{font-size:13px;color:var(--muted);line-height:1.6}
 textarea{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;margin:8px 0}.danger{width:100%;color:var(--exp);border-color:var(--exp)}#hi{font-size:15px;color:var(--muted);margin:-6px 0 12px}.head span{display:flex;gap:8px}
 #trend{display:flex;gap:6px}.tc{flex:1;text-align:center}.tb{height:90px;display:flex;align-items:flex-end;justify-content:center;gap:3px}.tb i{width:40%;border-radius:3px 3px 0 0;min-height:1px}.tc small{color:var(--muted);font-size:11px}
+@media print{.ov,#gear,#add,.primary,.pick,button{display:none!important}main{max-width:none}}
 </style>
 </head>
 <body>
@@ -75,6 +76,7 @@ textarea{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1
 
   
   <div id="hi"></div>
+  <div class="card" id="due" style="display:none;border-color:var(--accent)"></div>
   
   <div class="card"><div class="grid">
     <div class="stat"><small>Income</small><b class="inc" id="sInc">0</b></div>
@@ -104,6 +106,25 @@ textarea{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1
     <small id="goalTxt" style="color:var(--muted)">No goal set</small>
   </div>
 
+  <div class="card"><h2>Debts · lent &amp; borrowed</h2>
+    <div class="grid"><div class="stat"><small>Owed to you</small><b class="inc" id="dIn">0</b></div><div class="stat"><small>You owe</small><b class="exp" id="dOut">0</b></div><div class="stat"><small>Open debts</small><b id="dN">0</b></div></div>
+    <div class="row" style="margin-top:10px"><select id="dDir"><option value="lent">I lent (they owe me)</option><option value="borrowed">I borrowed (I owe)</option></select><input id="dWho" placeholder="Person name"></div>
+    <div class="row"><input type="number" id="dAmt" inputmode="decimal" placeholder="Amount"><input type="date" id="dDue" aria-label="Due date"></div>
+    <label class="srow"><span>Also record in my balance</span><input type="checkbox" id="dTx" checked style="flex:none;width:auto"></label>
+    <button class="primary" id="dAdd">Add debt</button><div id="dList"></div></div>
+
+  <div class="card"><h2>Recurring · every month</h2>
+    <div class="row"><select id="rType"><option value="exp">Expense</option><option value="inc">Income</option></select><input type="number" id="rAmt" inputmode="decimal" placeholder="Amount"></div>
+    <div class="row"><select id="rCat"></select><input type="number" id="rDay" min="1" max="28" placeholder="Day (1-28)"></div>
+    <div class="row"><input id="rNote" placeholder="Note (e.g. Rent, Salary)"></div>
+    <div class="row"><input type="number" id="rInc" inputmode="decimal" placeholder="Increase (optional)"><select id="rIncT" style="flex:none;width:auto"><option value="p">%</option><option value="a">fixed amount</option></select></div>
+    <div class="row"><select id="rEvery"><option value="1">Increase every month</option><option value="3">Increase every 3 months</option><option value="6">Increase every 6 months</option><option value="12" selected>Increase every year</option></select></div>
+    <button class="primary" id="rAdd">Add recurring</button><div id="rList"></div></div>
+
+  <div class="card"><h2>Category budgets</h2>
+    <div class="row"><select id="bCat"></select><input type="number" id="bAmt" inputmode="decimal" placeholder="Monthly limit"><button type="button" id="bSet" style="flex:none">Set</button></div>
+    <small style="color:var(--muted)">Set a limit to 0 to remove it.</small><div id="bList"></div></div>
+
   <div class="card"><h2>Insights this month</h2><div id="ins"></div></div>
 
   <div class="card"><h2>Last 6 months · green income, red spending</h2><div id="trend"></div></div>
@@ -125,6 +146,7 @@ textarea{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1
 <div class="row"><input id="pin" type="password" inputmode="numeric" maxlength="6" placeholder="New PIN (4 to 6 digits)"><button type="button" id="pinSet">Set</button><button type="button" id="pinOff">Remove</button></div>
 <h3>Your data</h3>
 <div class="row"><button type="button" id="bkExp" style="flex:1">Export backup</button><button type="button" id="bkImp" style="flex:1">Import backup</button></div>
+<div class="row"><button type="button" id="csv" style="flex:1">Export CSV (Excel)</button><button type="button" id="prt" style="flex:1">Print / save PDF</button></div>
 <textarea id="bk" rows="3" placeholder="Backup text appears here. To restore, paste it here and tap Import."></textarea>
 <small id="bkMsg" style="color:var(--muted)"></small>
 <button type="button" id="bkRst" class="danger" style="margin-top:10px">Reset all data</button>
@@ -191,6 +213,7 @@ function render(){
   $("cats").innerHTML=keys.length?dn+keys.map(function(k,i){var w=exp?by[k]/exp*100:0;return '<div class="cat"><i class="dot" style="background:'+PAL[i%PAL.length]+'"></i>'+ic(k)+' '+esc(k)+'<span>'+fmt(by[k])+' · '+Math.round(w)+'%</span><div class="bar"><i style="width:'+w+'%"></i></div></div>'}).join(""):'<div class="empty">No spending yet this month</div>';
   extras(m,inc,exp,by,tx);var q=($("q").value||"").toLowerCase();tx=tx.filter(function(t){return !q||(t.note+" "+t.cat).toLowerCase().indexOf(q)>-1});
   $("list").innerHTML=tx.length?tx.map(function(t){return '<div class="tx"><span style="font-size:22px">'+ic(t.cat)+'</span><div>'+esc(t.note||t.cat)+'<small>'+esc(t.cat)+' · '+t.date+'</small></div><b class="'+t.type+'">'+(t.type==="inc"?"+":"−")+fmt(t.amt)+'</b><button data-id="'+t.id+'" aria-label="Delete">✕</button></div>'}).join(""):'<div class="empty">No transactions yet</div>';
+  more(m,by);
 }
 $("add").onclick=function(){
   var a=parseFloat($("amt").value);
@@ -260,6 +283,60 @@ $("bkImp").onclick=function(){try{var p=JSON.parse($("bk").value);if(!p||!Array.
 var rs=0;$("bkRst").onclick=function(){if(!rs){rs=1;this.textContent="Tap again to delete everything";setTimeout(function(){rs=0;$("bkRst").textContent="Reset all data"},4000);return}rs=0;S={tx:[],limit:0};save();refresh();this.textContent="Reset all data";$("bkMsg").textContent="All data cleared."};
 hi();
 buildCur();applyLang();
+
+var ALLC=COMMON.concat(PROF.single,PROF.couple,PROF.family,["Other"]).filter(function(c,i,a){return a.indexOf(c)===i}),uid=0;
+function opts(a){return a.map(function(c){return "<option>"+esc(c)+"</option>"}).join("")}
+function nid(){return Date.now()*100+(uid++%100)}
+function ds(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function addTx(t,a,c,n,d){S.tx.push({id:nid(),type:t,amt:a,cat:c,note:n,date:d||today()})}
+function nextM(d){var y=+d.slice(0,4),m=+d.slice(5,7)+1;if(m>12){m=1;y++}return y+"-"+String(m).padStart(2,"0")+"-"+d.slice(8)}
+function autoRec(){S.rec=S.rec||[];var t=today(),ch=0;S.rec.forEach(function(r){var g=0;while(r.next<=t&&g++<60){addTx(r.type,r.amt,r.cat,r.note||"Recurring",r.next);r.next=nextM(r.next);ch=1;r.cnt=(r.cnt||0)+1;if(r.inc>0&&r.cnt>=(r.every||12)){r.amt=Math.round((r.incT==="a"?r.amt+r.inc:r.amt*(1+r.inc/100))*100)/100;r.cnt=0}}});if(ch)save()}
+function more(m,by){
+  S.debts=S.debts||[];S.rec=S.rec||[];S.cb=S.cb||{};
+  var a=0,b=0,n=0,t=today(),s3=ds(new Date(Date.now()+3*864e5)),soon=[];
+  S.debts.forEach(function(d){var l=d.amt-d.paid;if(l<=0)return;n++;if(d.dir==="lent")a+=l;else b+=l;if(d.due&&d.due<=s3)soon.push(d)});
+  $("dIn").textContent=fmt(a);$("dOut").textContent=fmt(b);$("dN").textContent=n;
+  $("dList").innerHTML=S.debts.length?S.debts.slice().reverse().map(function(d){var l=d.amt-d.paid,dn=l<=0;return '<div class="tx"><span style="font-size:22px">'+(d.dir==="lent"?"🤝":"💳")+'</span><div><b>'+esc(d.who)+'</b><small>'+(d.dir==="lent"?"Owes you ":"You owe ")+(dn?"· settled ✓":fmt(l)+" of "+fmt(d.amt))+(d.due&&!dn?" · due "+esc(d.due):"")+'</small></div>'+(dn?"":'<button data-pay="'+d.id+'">Pay</button>')+'<button data-dd="'+d.id+'">✕</button></div>'}).join(""):'<div class="empty">No debts yet</div>';
+  var du=$("due");if(soon.length){du.style.display="";du.innerHTML="<b>⏰ Due soon</b>"+soon.map(function(d){var l=d.amt-d.paid;return '<div class="cat">'+esc(d.who)+" · "+(d.dir==="lent"?"owes you ":"you owe ")+fmt(l)+'<span>'+(d.due<t?"overdue · ":"")+esc(d.due)+'</span></div>'}).join("")}else du.style.display="none";
+  $("rList").innerHTML=S.rec.length?S.rec.map(function(r){return '<div class="tx"><span style="font-size:22px">'+ic(r.cat)+'</span><div><b>'+esc(r.note||r.cat)+'</b><small>'+esc(r.cat)+" · day "+r.day+" · next "+esc(r.next)+(r.inc>0?" · +"+r.inc+(r.incT==="a"?"":"%")+" every "+(r.every===12?"year":r.every+" mo"):"")+'</small></div><b class="'+(r.type==="inc"?"inc":"exp")+'">'+fmt(r.amt)+'</b><button data-rd="'+r.id+'">✕</button></div>'}).join(""):'<div class="empty">Nothing recurring yet</div>';
+  var ks=Object.keys(S.cb);
+  $("bList").innerHTML=ks.length?ks.map(function(c){var L=S.cb[c],sp=by[c]||0,p=Math.min(100,sp/L*100);return '<div class="cat" style="margin-top:10px">'+ic(c)+" "+esc(c)+'<span>'+fmt(sp)+" / "+fmt(L)+'</span></div><div class="bar"><i style="width:'+p+'%;background:'+(sp>L?"var(--exp)":p>=(S.thr||80)?"#f59e0b":"var(--inc)")+'"></i></div>'}).join(""):'<div class="empty">No category budgets yet</div>';
+}
+$("rCat").innerHTML=opts(ALLC);$("bCat").innerHTML=opts(ALLC);
+$("rType").onchange=function(){$("rCat").innerHTML=opts(this.value==="inc"?INC:ALLC)};
+$("dAdd").onclick=function(){
+  var w=$("dWho").value.trim(),a=parseFloat($("dAmt").value),lent=$("dDir").value==="lent";
+  if(!w){$("dWho").focus();return}if(!(a>0)){$("dAmt").focus();return}
+  S.debts=S.debts||[];S.debts.push({id:nid(),dir:lent?"lent":"borrowed",who:w,amt:a,paid:0,due:$("dDue").value,tx:$("dTx").checked});
+  if($("dTx").checked){if(lent)addTx("exp",a,"Debt","Lent to "+w);else addTx("inc",a,"Other","Borrowed from "+w)}
+  $("dWho").value="";$("dAmt").value="";$("dDue").value="";save();render();
+};
+$("dList").onclick=function(e){
+  var el=e.target.closest&&e.target.closest("button");if(!el)return;
+  var pid=el.getAttribute("data-pay"),did=el.getAttribute("data-dd");
+  if(pid){var d=S.debts.filter(function(x){return String(x.id)===pid})[0];if(!d)return;var l=d.amt-d.paid,v=parseFloat(prompt((d.dir==="lent"?"Amount received":"Amount you paid")+" (max "+l+")",l));
+    if(!(v>0))return;v=Math.min(v,l);d.paid+=v;
+    if(d.tx){if(d.dir==="lent")addTx("inc",v,"Other","Repayment from "+d.who);else addTx("exp",v,"Debt","Repaid "+d.who)}
+    save();render()}
+  else if(did&&confirm("Delete this debt record?")){S.debts=S.debts.filter(function(x){return String(x.id)!==did});save();render()}
+};
+$("rAdd").onclick=function(){
+  var a=parseFloat($("rAmt").value),d=Math.max(1,Math.min(28,parseInt($("rDay").value,10)||0));
+  if(!(a>0)){$("rAmt").focus();return}if(!d){$("rDay").focus();return}
+  var n=new Date(),f=n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");if(f<today())f=nextM(f);
+  S.rec=S.rec||[];S.rec.push({id:nid(),type:$("rType").value,amt:a,cat:$("rCat").value,note:$("rNote").value.trim(),day:d,next:f,inc:Math.max(0,parseFloat($("rInc").value)||0),incT:$("rIncT").value,every:+$("rEvery").value,cnt:0});
+  $("rAmt").value="";$("rDay").value="";$("rNote").value="";$("rInc").value="";autoRec();save();render();
+};
+$("rList").onclick=function(e){var id=e.target.getAttribute&&e.target.getAttribute("data-rd");if(id&&confirm("Stop this recurring item?")){S.rec=S.rec.filter(function(x){return String(x.id)!==id});save();render()}};
+$("bSet").onclick=function(){var v=parseFloat($("bAmt").value)||0;S.cb=S.cb||{};if(v>0)S.cb[$("bCat").value]=v;else delete S.cb[$("bCat").value];$("bAmt").value="";save();render()};
+$("csv").onclick=function(){
+  var q=function(x){return '"'+String(x).replace(/"/g,'""')+'"'};
+  var rows=["Date,Type,Category,Note,Amount"].concat(S.tx.slice().sort(function(a,b){return a.date<b.date?-1:1}).map(function(t){return [t.date,t.type==="inc"?"Income":"Expense",q(t.cat),q(t.note||""),t.amt].join(",")}));
+  var a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff"+rows.join("\n")],{type:"text/csv"}));a.download="budget-tracker.csv";a.click();
+};
+$("prt").onclick=function(){$("sov").classList.remove("on");setTimeout(function(){window.print()},250)};
+autoRec();
+if(/[?&]add=1/.test(location.search))setTimeout(function(){$("amt").scrollIntoView({block:"center"});$("amt").focus()},400);
 setType("exp");render();
 })();
 </script>
