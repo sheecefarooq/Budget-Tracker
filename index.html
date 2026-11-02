@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="midnight">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -89,6 +89,18 @@ h1{font-size:20px;letter-spacing:-.3px}.card{border-radius:16px;box-shadow:0 2px
 .bill>button{border:0;background:none;color:var(--muted);padding:4px 6px}
 .rsum{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0 4px}.rsum small{display:block;color:var(--muted);font-size:12px}.rsum b{font-size:18px}
 .chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}.chips button{flex:none;border-radius:99px;padding:8px 12px;font-size:13px;white-space:nowrap}
+
+main[data-t=goal] [data-tab=goal],main[data-t=inv] [data-tab=inv]{display:block}
+#tabs{padding:6px 12px;gap:4px}#tabs button{border-radius:99px;border:0;margin:0;padding:9px 14px}#tabs button.on{background:var(--accent);color:#fff}
+.hero{background:linear-gradient(135deg,var(--accent),#7c3aed 70%,#db2777);color:#fff;border-radius:24px;padding:20px;margin-bottom:6px;box-shadow:0 12px 32px rgba(0,0,0,.35)}
+.hero small{opacity:.85;font-size:13px}.hb{font-size:34px;font-weight:800;letter-spacing:-1px;margin:4px 0 10px}.hrow{display:flex;justify-content:space-between;align-items:center}
+.hero button{background:rgba(255,255,255,.2);border:0;border-radius:99px;padding:6px 12px;color:#fff}.hchip{display:inline-block;padding:4px 12px;border-radius:99px;background:rgba(255,255,255,.2);font-size:12px;font-weight:600}
+.sec{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:18px 4px 8px}
+.accs{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:6px}.acc{border-radius:16px;padding:14px;color:#fff;min-height:70px;box-shadow:0 4px 14px rgba(0,0,0,.2);cursor:pointer}.acc small{display:block;opacity:.9;font-size:11px;text-transform:uppercase;letter-spacing:.05em}.acc b{font-size:18px}
+.acc.add{background:transparent;border:1.5px dashed var(--line);color:var(--accent);display:grid;place-items:center;font-weight:600;box-shadow:none}
+.gl{padding:12px 0;border-top:1px solid var(--line)}.gl:first-child{border-top:0}.gh{display:flex;align-items:center;gap:10px;margin-bottom:8px}.gh b{flex:1}
+.chips.wrap{flex-wrap:wrap;overflow:visible}.chip.bad{background:var(--exp);color:#fff}
+.card h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em}
 @media print{main [data-tab]{display:block!important}#due{display:none!important}#tabs{display:none}}
 </style>
 </head>
@@ -101,6 +113,8 @@ h1{font-size:20px;letter-spacing:-.3px}.card{border-radius:16px;box-shadow:0 2px
   <div id="hi"></div>
   <div class="card" id="due" data-tab="home" style="display:none;border-color:var(--accent)"></div>
   
+  <div class="hero" data-tab="home"><div class="hrow"><small>Total balance</small><button type="button" id="eye" aria-label="Hide balance">👁</button></div><div class="hb" id="hBal">0</div><span class="hchip" id="hChip"></span></div>
+<div class="sec" data-tab="home">Accounts</div><div data-tab="home"><div class="accs" id="accs"></div></div><div class="sec" data-tab="home">This month</div>
   <div class="card" data-tab="home"><div class="grid">
     <div class="stat"><small>Income</small><b class="inc" id="sInc">0</b></div>
     <div class="stat"><small>Spent</small><b class="exp" id="sExp">0</b></div>
@@ -119,6 +133,7 @@ h1{font-size:20px;letter-spacing:-.3px}.card{border-radius:16px;box-shadow:0 2px
     <div class="seg"><button id="tExp" class="on">Expense</button><button id="tInc">Income</button></div>
     <div class="row"><input type="number" id="amt" inputmode="decimal" placeholder="Amount" min="0" step="0.01"><input type="date" id="date"></div>
     <div class="row"><select id="cat"></select><button type="button" class="pick" id="catBtn"></button><input id="note" list="items" placeholder="Item or note (search…)"><datalist id="items"></datalist></div>
+    <div class="row"><select id="tAcc" aria-label="Account"></select></div>
     <button class="primary" id="add">Add</button>
   </div>
 
@@ -136,19 +151,24 @@ h1{font-size:20px;letter-spacing:-.3px}.card{border-radius:16px;box-shadow:0 2px
     <label class="srow"><span>Also record in my balance</span><input type="checkbox" id="dTx" checked style="flex:none;width:auto"></label>
     <button class="primary" id="dAdd">Add debt</button><div id="dList"></div></div>
 
-  <div class="card" data-tab="rec"><h2>Recurring · every month</h2>
+  <div class="card" data-tab="rec"><h2>New recurring payment</h2><small style="color:var(--muted)">Pick a quick template, then set amount and day.</small>
     <div class="chips" id="rChips"></div>
     <div class="row"><select id="rType"><option value="exp">Expense</option><option value="inc">Income</option></select><input type="number" id="rAmt" inputmode="decimal" placeholder="Amount"></div>
     <div class="row"><select id="rCat"></select><input type="number" id="rDay" min="1" max="28" placeholder="Day (1-28)"></div>
     <div class="row"><input id="rNote" placeholder="Note (e.g. Rent, Salary)"></div>
     <div class="row"><input type="number" id="rInc" inputmode="decimal" placeholder="Increase (optional)"><select id="rIncT" style="flex:none;width:auto"><option value="p">%</option><option value="a">fixed amount</option></select></div>
     <div class="row"><select id="rEvery"><option value="1">Increase every month</option><option value="3">Increase every 3 months</option><option value="6">Increase every 6 months</option><option value="12" selected>Increase every year</option></select></div>
-    <button class="primary" id="rAdd">Add recurring</button><div id="rList"></div></div>
+    <button class="primary" id="rAdd">Add recurring</button></div><div id="rList" data-tab="rec"></div>
 
   <div class="card" data-tab="bud"><h2>Category budgets</h2>
     <div class="row"><select id="bCat"></select><input type="number" id="bAmt" inputmode="decimal" placeholder="Monthly limit"><button type="button" id="bSet" style="flex:none">Set</button></div>
     <small style="color:var(--muted)">Set a limit to 0 to remove it.</small><div id="bList"></div></div>
 
+  <div class="card" data-tab="goal"><h2>What are you saving for?</h2><div class="row"><input id="gName" placeholder="Goal name"><input id="gAmt" type="number" inputmode="decimal" placeholder="Target"></div><button class="primary" id="gAdd">Create goal</button><div class="sec" style="margin-left:0">Some things people save for</div><div class="chips wrap" id="gTpl"></div></div>
+  <div data-tab="goal" id="gList"></div>
+  <div class="card" data-tab="inv"><h2>Investments · track growth</h2><div class="grid"><div class="stat"><small>Invested</small><b id="iI">0</b></div><div class="stat"><small>Value</small><b id="iV">0</b></div><div class="stat"><small>Growth</small><b id="iG">0%</b></div></div>
+    <div class="row" style="margin-top:10px"><input id="iName" placeholder="Name (e.g. Apple, S&amp;P 500 ETF)"></div><div class="row"><input type="number" id="iCost" inputmode="decimal" placeholder="Amount invested"><input type="number" id="iVal" inputmode="decimal" placeholder="Current value"></div><button class="primary" id="iAdd">Add investment</button></div>
+  <div class="card" data-tab="inv"><h2>Growth comparison · which performs best?</h2><div id="iList"></div></div>
   <div class="card" data-tab="home"><h2>Insights this month</h2><div id="ins"></div></div>
 
   <div class="card" data-tab="rep"><h2>Last 6 months · green income, red spending</h2><div id="trend"></div></div>
@@ -244,12 +264,12 @@ function render(){
   $("cats").innerHTML=keys.length?dn+keys.map(function(k,i){var w=exp?by[k]/exp*100:0;return '<div class="cat"><i class="dot" style="background:'+PAL[i%PAL.length]+'"></i>'+ic(k)+' '+esc(k)+'<span>'+fmt(by[k])+' · '+Math.round(w)+'%</span><div class="bar"><i style="width:'+w+'%"></i></div></div>'}).join(""):'<div class="empty">No spending yet this month</div>';
   extras(m,inc,exp,by,tx);var q=($("q").value||"").toLowerCase();tx=tx.filter(function(t){return !q||(t.note+" "+t.cat).toLowerCase().indexOf(q)>-1});
   $("list").innerHTML=tx.length?tx.map(function(t){return '<div class="tx"><span style="font-size:22px">'+ic(t.cat)+'</span><div>'+esc(t.note||t.cat)+'<small>'+esc(t.cat)+' · '+t.date+'</small></div><b class="'+t.type+'">'+(t.type==="inc"?"+":"−")+fmt(t.amt)+'</b><button data-id="'+t.id+'" aria-label="Delete">✕</button></div>'}).join(""):'<div class="empty">No transactions yet</div>';
-  more(m,by);
+  more(m,by);ext(m,by,inc,exp);
 }
 $("add").onclick=function(){
   var a=parseFloat($("amt").value);
   if(!(a>0)){$("amt").focus();return}
-  S.tx.push({id:Date.now(),type:type,amt:a,cat:$("cat").value,note:$("note").value.trim(),date:$("date").value||today()});
+  S.tx.push({id:Date.now(),type:type,amt:a,cat:$("cat").value,note:$("note").value.trim(),acc:$("tAcc").value,date:$("date").value||today()});
   $("amt").value="";$("note").value="";save();
   $("month").value=($("date").value||today()).slice(0,7);render();
 };
@@ -290,7 +310,7 @@ $("cl").onclick=function(e){var b=e.target.closest&&e.target.closest(".chip");if
 $("ov").onclick=function(e){if(e.target===this)this.classList.remove("on")};
 var TH=[["auto","Auto","conic-gradient(#fff 0 50%,#111 0)"],["light","White","#fff"],["dark","Black","#000"],["sky","Sky","linear-gradient(135deg,#bae6fd,#fbcfe8)"],["ocean","Ocean","linear-gradient(135deg,#0f2027,#2c5364)"],["sunset","Sunset","linear-gradient(135deg,#f97316,#db2777)"],["forest","Forest","linear-gradient(135deg,#134e5e,#71b280)"],["aurora","Aurora","linear-gradient(135deg,#4338ca,#db2777)"],["emerald","Emerald","linear-gradient(135deg,#065f46,#10b981,#6ee7b7)"],["midnight","Midnight","linear-gradient(135deg,#020617,#0f172a,#334155)"],["rose","Rose Pink","linear-gradient(135deg,#9d174d,#db2777,#f9a8d4)"],["magblue","Magenta Blue","linear-gradient(135deg,#c026d3,#6366f1,#2563eb)"],["blue","Blue","linear-gradient(135deg,#2563eb,#06b6d4)"],["red","Red","linear-gradient(135deg,#dc2626,#f43f5e,#fb7185)"]];
 $("sw").innerHTML=TH.map(function(t){return '<button type="button" data-t="'+t[0]+'" title="'+t[1]+'" aria-label="'+t[1]+'" style="background:'+t[2]+'"></button>'}).join("");
-function applyTheme(){var t=S.theme||"auto",r=document.documentElement;if(t==="auto")r.removeAttribute("data-theme");else r.setAttribute("data-theme",t);document.querySelectorAll("#sw button").forEach(function(b){b.classList.toggle("on",b.getAttribute("data-t")===t)})}
+function applyTheme(){var t=S.theme||"midnight",r=document.documentElement;if(t==="auto")r.removeAttribute("data-theme");else r.setAttribute("data-theme",t);document.querySelectorAll("#sw button").forEach(function(b){b.classList.toggle("on",b.getAttribute("data-t")===t)})}
 $("sw").onclick=function(e){var b=e.target.closest&&e.target.closest("button");if(b){S.theme=b.getAttribute("data-t");save();applyTheme()}};
 applyTheme();
 function hi(){$("hi").textContent=S.name?"Hello, "+S.name+" 👋":""}
@@ -391,7 +411,7 @@ $("remDays").onchange=function(){S.rd=+this.value;save();render();checkDue()};
 $("remBtn").onclick=function(){if(!window.Notification)return remMsg();Notification.requestPermission().then(function(){remMsg();if(Notification.permission==="granted"){notify("Reminders are on","You'll be notified before bills and debts are due.","welcome");checkDue()}})};
 setInterval(checkDue,30*60*1000);
 document.addEventListener("visibilitychange",function(){if(!document.hidden){autoRec();checkDue();render()}});
-var TABS=[["home","🏠 Home"],["act","📋 Activity"],["bud","🎯 Budgets"],["debt","💳 Debts"],["rec","🔁 Recurring"],["rep","📊 Reports"]];
+var TABS=[["home","🏠 Home"],["act","📋 Activity"],["bud","🎯 Budgets"],["goal","🏁 Goals"],["inv","📈 Invest"],["debt","💳 Debts"],["rec","🔁 Recurring"],["rep","📊 Reports"]];
 $("tabs").innerHTML=TABS.map(function(t){return '<button type="button" data-t="'+t[0]+'">'+t[1]+'</button>'}).join("");
 function tab(t){document.querySelector("main").setAttribute("data-t",t);document.querySelectorAll("#tabs button").forEach(function(b){var on=b.getAttribute("data-t")===t;b.classList.toggle("on",on);if(on)try{b.scrollIntoView({inline:"center",block:"nearest"})}catch(e){}});try{localStorage.setItem(KEY+"-tab",t)}catch(e){}window.scrollTo(0,0)}
 $("tabs").onclick=function(e){var b=e.target.closest&&e.target.closest("button");if(b)tab(b.getAttribute("data-t"))};
@@ -406,6 +426,48 @@ kvGet("state",function(v){var cur=null;try{cur=localStorage.getItem(KEY)}catch(e
   if(!cur){try{var p=JSON.parse(v.d);if(p&&Array.isArray(p.tx)&&p.tx.length){S=p;try{localStorage.setItem(KEY,v.d)}catch(e){}refresh()}}catch(e){}}});
 kvKeys(function(k){k.filter(function(x){return String(x).indexOf("snap-")===0}).sort().slice(0,-7).forEach(function(x){idb(function(d){try{d.transaction("kv","readwrite").objectStore("kv").delete(x)}catch(e){}})})});
 if(/[?&]add=1/.test(location.search))setTimeout(function(){$("amt").scrollIntoView({block:"center"});$("amt").focus()},400);
+
+function ext(m,by,inc,exp){
+var t=today(),thr=S.thr||80,P8=["#3b82f6","#f59e0b","#10b981","#ef4444","#8b5cf6","#ec4899","#14b8a6","#f97316"],AC=["#0ea5e9","#a855f7","#14b8a6","#f59e0b","#3b82f6","#ec4899"];
+S.acc=S.acc||[];S.goals=S.goals||[];S.inv=S.inv||[];S.rec=S.rec||[];S.cb=S.cb||{};
+var net=0;S.tx.forEach(function(x){net+=x.type==="inc"?x.amt:-x.amt});S.acc.forEach(function(a){net+=a.bal});
+var pd=new Date(+m.slice(0,4),+m.slice(5,7)-2,1),pk=pd.getFullYear()+"-"+String(pd.getMonth()+1).padStart(2,"0"),pe=0;
+S.tx.forEach(function(x){if(x.type==="exp"&&x.date.slice(0,7)===pk)pe+=x.amt});
+$("hBal").textContent=S.hide?"••••••":fmt(net);$("eye").textContent=S.hide?"🙈":"👁";
+$("hChip").textContent=pe>0?"Spending "+(exp>=pe?"↑ ":"↓ ")+Math.abs(Math.round((exp-pe)/pe*100))+"% vs last month":"Spent "+fmt(exp)+" this month";
+$("accs").innerHTML=S.acc.map(function(a,i){var b=a.bal;S.tx.forEach(function(x){if(x.acc===String(a.id))b+=x.type==="inc"?x.amt:-x.amt});return '<div class="acc" data-a="'+a.id+'" style="background:'+AC[i%6]+'"><small>'+esc(a.name)+'</small><b>'+(S.hide?"••••":fmt(b))+'</b></div>'}).join("")+'<div class="acc add" id="accAdd">＋ Add account</div>';
+var sel=$("tAcc"),sv=sel.value;sel.innerHTML='<option value="">Account: none</option>'+S.acc.map(function(a){return '<option value="'+a.id+'">'+esc(a.name)+'</option>'}).join("");sel.value=sv;
+$("gList").innerHTML=S.goals.length?'<div class="card">'+S.goals.map(function(g){var p=Math.min(100,g.saved/g.target*100);return '<div class="gl"><div class="gh"><span style="font-size:24px">'+g.ic+'</span><b>'+esc(g.name)+'</b><button data-g="'+g.id+'">＋ Add</button><button data-gd="'+g.id+'" aria-label="Delete">✕</button></div><div class="bar"><i style="width:'+p+'%;background:var(--inc)"></i></div><small style="color:var(--muted)">'+fmt(g.saved)+" of "+fmt(g.target)+" · "+Math.round(p)+"%</small></div>"}).join("")+"</div>":'<div class="card empty">No goals yet. Pick an idea above.</div>';
+var ti=0,tv=0;S.inv.forEach(function(v){ti+=v.cost;tv+=v.val});var gp=ti?(tv-ti)/ti*100:0;
+$("iI").textContent=fmt(ti);$("iV").textContent=fmt(tv);$("iG").textContent=(gp>=0?"+":"")+gp.toFixed(1)+"%";$("iG").className=gp>=0?"inc":"exp";
+var iv=S.inv.map(function(v){return{v:v,g:v.cost?(v.val-v.cost)/v.cost*100:0}}).sort(function(a,b){return b.g-a.g}),mx=Math.max.apply(null,iv.map(function(o){return Math.abs(o.g)}).concat([1]));
+$("iList").innerHTML=iv.length?iv.map(function(o,i){var v=o.v;return '<div class="cat" style="margin-bottom:16px"><i class="dot" style="background:'+P8[i%8]+'"></i>'+esc(v.name)+'<span class="'+(o.g>=0?"inc":"exp")+'">'+(o.g>=0?"+":"")+o.g.toFixed(1)+'%</span><div class="bar"><i style="width:'+Math.abs(o.g)/mx*100+'%;background:'+(o.g>=0?"var(--inc)":"var(--exp)")+'"></i></div><small style="color:var(--muted)">'+fmt(v.cost)+" → "+fmt(v.val)+'</small> <button data-iu="'+v.id+'">Update</button> <button data-ix="'+v.id+'" aria-label="Delete">✕</button></div>'}).join(""):'<div class="empty">Add your first investment</div>';
+var g={},mi=0,mo2=0;S.rec.forEach(function(r){(g[r.cat]=g[r.cat]||[]).push(r);if(r.type==="inc")mi+=r.amt;else mo2+=r.amt});
+var rh=S.rec.length?'<div class="card"><div class="rsum"><div><small>Monthly bills</small><b class="exp">'+fmt(mo2)+'</b></div><div><small>Monthly income</small><b class="inc">'+fmt(mi)+'</b></div></div></div>':"";
+Object.keys(g).sort().forEach(function(c){var arr=g[c].sort(function(a,b){return a.next<b.next?-1:1}),tot=0;arr.forEach(function(r){if(r.type!=="inc")tot+=r.amt});
+rh+='<div class="card"><div class="gh"><span style="font-size:22px">'+ic(c)+'</span><b>'+esc(c)+'</b><small style="color:var(--muted)">'+arr.length+(tot?" · "+fmt(tot)+"/mo":"")+'</small></div>'+arr.map(function(r){var n=dd(r.next),lab=n<0?"Overdue "+(-n)+"d":n===0?"Due today":n===1?"Tomorrow":"In "+n+" days",cl=n<0?"bad":n<=(S.rd||2)?"warn":"",pr=PRE.filter(function(x){return x[1].toLowerCase()===(r.note||"").toLowerCase()})[0];
+return '<div class="bill"><div class="bi">'+(pr?pr[0]:ic(r.cat))+'</div><div class="bm"><b>'+esc(r.note||r.cat)+'</b><small>'+esc(r.next)+" · day "+r.day+(r.inc>0?" · +"+r.inc+(r.incT==="a"?"":"%")+"/"+(r.every===12?"yr":r.every+"mo"):"")+'</small></div><div class="br"><b class="'+(r.type==="inc"?"inc":"exp")+'">'+fmt(r.amt)+'</b><span class="chip '+cl+'">'+lab+'</span><span class="chip">Every 1 month</span></div><button data-rd="'+r.id+'" aria-label="Remove">✕</button></div>'}).join("")+'</div>'});
+$("rList").innerHTML=rh||'<div class="card empty">Nothing recurring yet. Tap a template above to start.</div>';
+var ks=Object.keys(S.cb);
+$("bList").innerHTML=ks.length?ks.map(function(c){var L=S.cb[c],sp=by[c]||0,p=Math.min(100,sp/L*100),st=sp>L?["Overspend","var(--exp)"]:p>=thr?["Risk of overspend","var(--warn)"]:["On track","var(--inc)"];return '<div class="cat" style="margin-top:12px">'+ic(c)+" "+esc(c)+'<span style="color:'+st[1]+'">'+st[0]+" · "+fmt(sp)+" / "+fmt(L)+'</span></div><div class="bar"><i style="width:'+p+'%;background:'+st[1]+'"></i></div>'}).join(""):'<div class="empty">No category budgets yet</div>';
+}
+var GT=[["🚗","New vehicle"],["🏠","New home"],["🌴","Holiday trip"],["🎓","Education"],["🛡️","Emergency fund"],["🩺","Health care"]];
+$("gTpl").innerHTML=GT.map(function(x,i){return '<button type="button" data-i="'+i+'">'+x[0]+" "+x[1]+"</button>"}).join("");
+$("gTpl").onclick=function(e){var b=e.target.closest("button");if(b){$("gName").value=GT[+b.getAttribute("data-i")][1];$("gAmt").focus()}};
+$("gAdd").onclick=function(){var n=$("gName").value.trim(),a=parseFloat($("gAmt").value);if(!n){$("gName").focus();return}if(!(a>0)){$("gAmt").focus();return}
+S.goals.push({id:nid(),name:n,ic:(GT.filter(function(x){return x[1]===n})[0]||["🎯"])[0],target:a,saved:0});$("gName").value="";$("gAmt").value="";save();render()};
+$("gList").onclick=function(e){var b=e.target.closest("button");if(!b)return;var id=b.getAttribute("data-g"),dl=b.getAttribute("data-gd");
+if(id){var g=S.goals.filter(function(x){return String(x.id)===id})[0],v=parseFloat(prompt("Amount to add (recorded under Savings)"));if(g&&v>0){g.saved+=v;addTx("exp",v,"Savings","Goal: "+g.name);save();render()}}
+else if(dl&&confirm("Delete this goal?")){S.goals=S.goals.filter(function(x){return String(x.id)!==dl});save();render()}};
+$("iAdd").onclick=function(){var n=$("iName").value.trim(),c=parseFloat($("iCost").value),v=parseFloat($("iVal").value);if(!n){$("iName").focus();return}if(!(c>0)){$("iCost").focus();return}
+S.inv.push({id:nid(),name:n,cost:c,val:isNaN(v)?c:v});$("iName").value="";$("iCost").value="";$("iVal").value="";save();render()};
+$("iList").onclick=function(e){var b=e.target.closest("button");if(!b)return;var u=b.getAttribute("data-iu"),x=b.getAttribute("data-ix");
+if(u){var i=S.inv.filter(function(k){return String(k.id)===u})[0],v=parseFloat(prompt("New current value of "+i.name,i.val));if(v>=0){i.val=v;save();render()}}
+else if(x&&confirm("Remove this investment?")){S.inv=S.inv.filter(function(k){return String(k.id)!==x});save();render()}};
+$("eye").onclick=function(){S.hide=!S.hide;save();render()};
+$("accs").onclick=function(e){var el=e.target.closest(".acc");if(!el)return;
+if(el.id==="accAdd"){var n=(prompt("Account name (e.g. Cash, Bank, Savings)")||"").trim();if(!n)return;S.acc.push({id:nid(),name:n.slice(0,20),bal:parseFloat(prompt("Opening balance","0"))||0});save();render()}
+else if(confirm("Delete this account? Your transactions stay in history.")){S.acc=S.acc.filter(function(a){return String(a.id)!==el.getAttribute("data-a")});save();render()}};
 setType("exp");render();checkDue();
 })();
 </script>
