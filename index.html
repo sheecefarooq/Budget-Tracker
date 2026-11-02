@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Budget Tracker</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#f6f7f9" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0f1115" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#0f0c29">
+<style>html{background:#0f0c29}</style>
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -56,7 +56,7 @@ button{cursor:pointer}
 body{background-attachment:fixed}
 body{background:var(--page,var(--bg));background-attachment:fixed}
 .sheet{background:var(--sheet,var(--card))}.donut::after{background:var(--sheet,var(--card))}
-.sw{display:flex;gap:10px;margin-bottom:14px;overflow-x:auto;padding:4px 2px}.sw button{flex:none;width:38px;height:38px;border-radius:50%;border:2px solid var(--line);padding:0}.sw button.on{outline:3px solid var(--accent);outline-offset:2px}
+.sw{display:flex;gap:10px;margin-bottom:14px;overflow-x:auto;padding:4px 2px}.sw button{flex:none;width:38px;height:38px;border-radius:50%;border:2px solid var(--line);padding:0}.sw button.on{outline:3px solid var(--accent);outline-offset:2px;transform:scale(1.06)}.sw button{box-shadow:0 3px 10px rgba(0,0,0,.12);transition:transform .18s,outline .18s}.card{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 :root[data-theme="light"]{--page:#fff;--bg:#f3f4f6;--card:#fff;--text:#111827;--muted:#6b7280;--line:#e5e7eb;--accent:#2563eb;--inc:#16a34a;--exp:#dc2626;--warn:#d97706;color-scheme:light}
 :root[data-theme="dark"]{--page:#000;--bg:#141414;--card:#0d0d0d;--text:#f5f5f5;--muted:#9ca3af;--line:#262626;--accent:#60a5fa;--inc:#4ade80;--exp:#f87171;--warn:#fbbf24;color-scheme:dark}
 :root[data-theme="sky"]{--page:linear-gradient(160deg,#e0f2fe,#fce7f3);--bg:rgba(255,255,255,.7);--card:rgba(255,255,255,.72);--sheet:#fff;--text:#0f172a;--muted:#64748b;--line:rgba(15,23,42,.1);--accent:#2563eb;--inc:#16a34a;--exp:#dc2626;--warn:#d97706;color-scheme:light}
@@ -64,6 +64,12 @@ body{background:var(--page,var(--bg));background-attachment:fixed}
 :root[data-theme="sunset"]{--page:linear-gradient(160deg,#f97316,#db2777);--bg:rgba(0,0,0,.18);--card:rgba(0,0,0,.24);--sheet:#7a1f3d;--text:#fff;--muted:rgba(255,255,255,.78);--line:rgba(255,255,255,.22);--accent:#e11d48;--inc:#bbf7d0;--exp:#ffe4e6;--warn:#fde68a;color-scheme:dark}
 :root[data-theme="forest"]{--page:linear-gradient(160deg,#134e5e,#71b280);--bg:rgba(0,0,0,.16);--card:rgba(0,0,0,.24);--sheet:#1b4d3e;--text:#fff;--muted:rgba(255,255,255,.78);--line:rgba(255,255,255,.2);--accent:#15803d;--inc:#bbf7d0;--exp:#fecaca;--warn:#fde68a;color-scheme:dark}
 :root[data-theme="aurora"]{--page:linear-gradient(160deg,#4338ca,#9333ea,#db2777);--bg:rgba(0,0,0,.16);--card:rgba(0,0,0,.24);--sheet:#3b2a82;--text:#fff;--muted:rgba(255,255,255,.78);--line:rgba(255,255,255,.22);--accent:#7c3aed;--inc:#bbf7d0;--exp:#fecdd3;--warn:#fde68a;color-scheme:dark}
+:root[data-theme="magblue"]{--page:linear-gradient(145deg,#86198f,#4f46e5,#2563eb);--bg:rgba(255,255,255,.09);--card:rgba(255,255,255,.13);--sheet:#312e81;--text:#fff;--muted:rgba(255,255,255,.8);--line:rgba(255,255,255,.2);--accent:#c026d3;--inc:#bbf7d0;--exp:#fecdd3;--warn:#fde68a;color-scheme:dark}
+:root[data-theme="blue"]{--page:linear-gradient(145deg,#1d4ed8,#0891b2);--bg:rgba(255,255,255,.09);--card:rgba(255,255,255,.13);--sheet:#164e63;--text:#fff;--muted:rgba(255,255,255,.8);--line:rgba(255,255,255,.2);--accent:#38bdf8;--inc:#bbf7d0;--exp:#fecdd3;--warn:#fde68a;color-scheme:dark}
+:root[data-theme="red"]{--page:linear-gradient(145deg,#991b1b,#e11d48,#fb7185);--bg:rgba(255,255,255,.09);--card:rgba(255,255,255,.13);--sheet:#881337;--text:#fff;--muted:rgba(255,255,255,.8);--line:rgba(255,255,255,.2);--accent:#fb7185;--inc:#bbf7d0;--exp:#ffe4e6;--warn:#fde68a;color-scheme:dark}
+:root[data-theme="emerald"]{--page:linear-gradient(145deg,#065f46,#10b981,#6ee7b7);--bg:rgba(255,255,255,.12);--card:rgba(255,255,255,.78);--sheet:#ecfdf5;--text:#064e3b;--muted:#477568;--line:rgba(6,78,59,.15);--accent:#059669;--inc:#047857;--exp:#dc2626;--warn:#b45309;color-scheme:light}
+:root[data-theme="midnight"]{--page:linear-gradient(145deg,#020617,#0f172a,#334155);--bg:rgba(255,255,255,.06);--card:rgba(255,255,255,.08);--sheet:#0f172a;--text:#f8fafc;--muted:#cbd5e1;--line:rgba(255,255,255,.14);--accent:#38bdf8;--inc:#4ade80;--exp:#fb7185;--warn:#fbbf24;color-scheme:dark}
+:root[data-theme="rose"]{--page:linear-gradient(145deg,#9d174d,#db2777,#f9a8d4);--bg:rgba(255,255,255,.12);--card:rgba(255,255,255,.78);--sheet:#fff1f2;--text:#831843;--muted:#9d5578;--line:rgba(131,24,67,.15);--accent:#db2777;--inc:#15803d;--exp:#be123c;--warn:#b45309;color-scheme:light}
 .srow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line)}.about{font-size:13px;color:var(--muted);line-height:1.6}
 textarea{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;margin:8px 0}.danger{width:100%;color:var(--exp);border-color:var(--exp)}#hi{font-size:15px;color:var(--muted);margin:-6px 0 12px}.head span{display:flex;gap:8px}
 #trend{display:flex;gap:6px}.tc{flex:1;text-align:center}.tb{height:90px;display:flex;align-items:flex-end;justify-content:center;gap:3px}.tb i{width:40%;border-radius:3px 3px 0 0;min-height:1px}.tc small{color:var(--muted);font-size:11px}
@@ -75,6 +81,14 @@ main[data-t=home] [data-tab=home],main[data-t=act] [data-tab=act],main[data-t=bu
 #tabs button{flex:none;border:0;background:none;border-radius:0;padding:12px 14px;color:var(--muted);font-weight:600;font-size:14px;white-space:nowrap;border-bottom:3px solid transparent}
 #tabs button.on{color:var(--accent);border-bottom-color:var(--accent)}
 h1{font-size:20px;letter-spacing:-.3px}.card{border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.07);padding:16px}.stat b{font-size:20px}.primary{padding:12px;border-radius:12px}.primary:active{filter:brightness(.92)}
+.bill{display:flex;align-items:center;gap:12px;padding:12px;margin-top:8px;border-radius:14px;background:rgba(127,127,127,.09)}
+.bill .bi{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:20px;background:rgba(127,127,127,.14);flex:none}
+.bm{flex:1;min-width:0}.bm b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bm small{color:var(--muted);font-size:12px}
+.br{display:flex;flex-direction:column;gap:4px;align-items:flex-end}.br b{white-space:nowrap}
+.chip{font-size:11px;padding:2px 8px;border-radius:99px;background:rgba(127,127,127,.15);color:var(--muted);white-space:nowrap}.chip.warn{background:rgba(245,158,11,.18);color:#d97706}
+.bill>button{border:0;background:none;color:var(--muted);padding:4px 6px}
+.rsum{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0 4px}.rsum small{display:block;color:var(--muted);font-size:12px}.rsum b{font-size:18px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}.chips button{flex:none;border-radius:99px;padding:8px 12px;font-size:13px;white-space:nowrap}
 @media print{main [data-tab]{display:block!important}#due{display:none!important}#tabs{display:none}}
 </style>
 </head>
@@ -123,6 +137,7 @@ h1{font-size:20px;letter-spacing:-.3px}.card{border-radius:16px;box-shadow:0 2px
     <button class="primary" id="dAdd">Add debt</button><div id="dList"></div></div>
 
   <div class="card" data-tab="rec"><h2>Recurring · every month</h2>
+    <div class="chips" id="rChips"></div>
     <div class="row"><select id="rType"><option value="exp">Expense</option><option value="inc">Income</option></select><input type="number" id="rAmt" inputmode="decimal" placeholder="Amount"></div>
     <div class="row"><select id="rCat"></select><input type="number" id="rDay" min="1" max="28" placeholder="Day (1-28)"></div>
     <div class="row"><input id="rNote" placeholder="Note (e.g. Rent, Salary)"></div>
@@ -158,6 +173,7 @@ h1{font-size:20px;letter-spacing:-.3px}.card{border-radius:16px;box-shadow:0 2px
 <div class="row"><button type="button" id="csv" style="flex:1">Export CSV (Excel)</button><button type="button" id="prt" style="flex:1">Print / save PDF</button></div>
 <textarea id="bk" rows="3" placeholder="Backup text appears here. To restore, paste it here and tap Import."></textarea>
 <small id="bkMsg" style="color:var(--muted)"></small>
+<h3>Reminders</h3><div class="row"><select id="remDays" aria-label="Remind me before"><option value="1">1 day before</option><option value="2">2 days before</option><option value="3">3 days before</option><option value="5">5 days before</option><option value="7">7 days before</option></select><button type="button" id="remBtn" style="flex:none">Enable notifications</button></div><small id="remMsg" style="color:var(--muted)"></small>
 <h3>Automatic backups · last 7 days</h3><div class="row"><select id="snapSel" aria-label="Backups"></select><button type="button" id="snapRst" style="flex:none">Restore</button></div>
 <button type="button" id="bkRst" class="danger" style="margin-top:10px">Reset all data</button>
 <h3>About</h3>
@@ -272,7 +288,7 @@ $("catBtn").onclick=function(){$("cq").value="";sheet();$("ov").classList.add("o
 $("cq").oninput=sheet;
 $("cl").onclick=function(e){var b=e.target.closest&&e.target.closest(".chip");if(b){$("cat").value=b.getAttribute("data-c");$("ov").classList.remove("on");sheet()}};
 $("ov").onclick=function(e){if(e.target===this)this.classList.remove("on")};
-var TH=[["auto","Auto","conic-gradient(#fff 0 50%,#111 0)"],["light","White","#fff"],["dark","Black","#000"],["sky","Sky","linear-gradient(135deg,#bae6fd,#fbcfe8)"],["ocean","Ocean","linear-gradient(135deg,#0f2027,#2c5364)"],["sunset","Sunset","linear-gradient(135deg,#f97316,#db2777)"],["forest","Forest","linear-gradient(135deg,#134e5e,#71b280)"],["aurora","Aurora","linear-gradient(135deg,#4338ca,#db2777)"]];
+var TH=[["auto","Auto","conic-gradient(#fff 0 50%,#111 0)"],["light","White","#fff"],["dark","Black","#000"],["sky","Sky","linear-gradient(135deg,#bae6fd,#fbcfe8)"],["ocean","Ocean","linear-gradient(135deg,#0f2027,#2c5364)"],["sunset","Sunset","linear-gradient(135deg,#f97316,#db2777)"],["forest","Forest","linear-gradient(135deg,#134e5e,#71b280)"],["aurora","Aurora","linear-gradient(135deg,#4338ca,#db2777)"],["emerald","Emerald","linear-gradient(135deg,#065f46,#10b981,#6ee7b7)"],["midnight","Midnight","linear-gradient(135deg,#020617,#0f172a,#334155)"],["rose","Rose Pink","linear-gradient(135deg,#9d174d,#db2777,#f9a8d4)"],["magblue","Magenta Blue","linear-gradient(135deg,#c026d3,#6366f1,#2563eb)"],["blue","Blue","linear-gradient(135deg,#2563eb,#06b6d4)"],["red","Red","linear-gradient(135deg,#dc2626,#f43f5e,#fb7185)"]];
 $("sw").innerHTML=TH.map(function(t){return '<button type="button" data-t="'+t[0]+'" title="'+t[1]+'" aria-label="'+t[1]+'" style="background:'+t[2]+'"></button>'}).join("");
 function applyTheme(){var t=S.theme||"auto",r=document.documentElement;if(t==="auto")r.removeAttribute("data-theme");else r.setAttribute("data-theme",t);document.querySelectorAll("#sw button").forEach(function(b){b.classList.toggle("on",b.getAttribute("data-t")===t)})}
 $("sw").onclick=function(e){var b=e.target.closest&&e.target.closest("button");if(b){S.theme=b.getAttribute("data-t");save();applyTheme()}};
@@ -308,12 +324,16 @@ function nextM(d){var y=+d.slice(0,4),m=+d.slice(5,7)+1;if(m>12){m=1;y++}return 
 function autoRec(){S.rec=S.rec||[];var t=today(),ch=0;S.rec.forEach(function(r){var g=0;while(r.next<=t&&g++<60){addTx(r.type,r.amt,r.cat,r.note||"Recurring",r.next);r.next=nextM(r.next);ch=1;r.cnt=(r.cnt||0)+1;if(r.inc>0&&r.cnt>=(r.every||12)){r.amt=Math.round((r.incT==="a"?r.amt+r.inc:r.amt*(1+r.inc/100))*100)/100;r.cnt=0}}});if(ch)save()}
 function more(m,by){
   S.debts=S.debts||[];S.rec=S.rec||[];S.cb=S.cb||{};
-  var a=0,b=0,n=0,t=today(),s3=ds(new Date(Date.now()+3*864e5)),soon=[];
+  var a=0,b=0,n=0,t=today(),s3=ds(new Date(Date.now()+(S.rd||2)*864e5)),soon=[];
   S.debts.forEach(function(d){var l=d.amt-d.paid;if(l<=0)return;n++;if(d.dir==="lent")a+=l;else b+=l;if(d.due&&d.due<=s3)soon.push(d)});
   $("dIn").textContent=fmt(a);$("dOut").textContent=fmt(b);$("dN").textContent=n;
   $("dList").innerHTML=S.debts.length?S.debts.slice().reverse().map(function(d){var l=d.amt-d.paid,dn=l<=0;return '<div class="tx"><span style="font-size:22px">'+(d.dir==="lent"?"🤝":"💳")+'</span><div><b>'+esc(d.who)+'</b><small>'+(d.dir==="lent"?"Owes you ":"You owe ")+(dn?"· settled ✓":fmt(l)+" of "+fmt(d.amt))+(d.due&&!dn?" · due "+esc(d.due):"")+'</small></div>'+(dn?"":'<button data-pay="'+d.id+'">Pay</button>')+'<button data-dd="'+d.id+'">✕</button></div>'}).join(""):'<div class="empty">No debts yet</div>';
-  var du=$("due");if(soon.length){du.style.display="";du.innerHTML="<b>⏰ Due soon</b>"+soon.map(function(d){var l=d.amt-d.paid;return '<div class="cat">'+esc(d.who)+" · "+(d.dir==="lent"?"owes you ":"you owe ")+fmt(l)+'<span>'+(d.due<t?"overdue · ":"")+esc(d.due)+'</span></div>'}).join("")}else du.style.display="none";
-  $("rList").innerHTML=S.rec.length?S.rec.map(function(r){return '<div class="tx"><span style="font-size:22px">'+ic(r.cat)+'</span><div><b>'+esc(r.note||r.cat)+'</b><small>'+esc(r.cat)+" · day "+r.day+" · next "+esc(r.next)+(r.inc>0?" · +"+r.inc+(r.incT==="a"?"":"%")+" every "+(r.every===12?"year":r.every+" mo"):"")+'</small></div><b class="'+(r.type==="inc"?"inc":"exp")+'">'+fmt(r.amt)+'</b><button data-rd="'+r.id+'">✕</button></div>'}).join(""):'<div class="empty">Nothing recurring yet</div>';
+  var du=$("due"),ls=soon.map(function(d){var l=d.amt-d.paid;return [d.due,esc(d.who)+" · "+(d.dir==="lent"?"owes you ":"you owe ")+fmt(l),d.due<t?"overdue · "+esc(d.due):esc(d.due)]});
+  S.rec.forEach(function(r){if(r.next<=s3)ls.push([r.next,esc(r.note||r.cat)+" · "+fmt(r.amt),esc(r.next)])});
+  ls.sort(function(x,y){return x[0]<y[0]?-1:1});
+  if(ls.length){du.style.display="";du.innerHTML="<b>⏰ Due soon</b>"+ls.map(function(x){return '<div class="cat">'+x[1]+'<span>'+x[2]+'</span></div>'}).join("")}else du.style.display="none";
+  var mi=0,mo=0;S.rec.forEach(function(r){if(r.type==="inc")mi+=r.amt;else mo+=r.amt});
+  $("rList").innerHTML=S.rec.length?'<div class="rsum"><div><small>Monthly bills</small><b class="exp">'+fmt(mo)+'</b></div><div><small>Monthly income</small><b class="inc">'+fmt(mi)+'</b></div></div>'+S.rec.slice().sort(function(a,b){return a.next<b.next?-1:1}).map(function(r){var n=dd(r.next),cl=n<=(S.rd||2)?"warn":"",lab=n<=0?"Due today":n===1?"Tomorrow":"In "+n+" days",pr=PRE.filter(function(x){return x[1].toLowerCase()===(r.note||"").toLowerCase()})[0];return '<div class="bill"><div class="bi">'+(pr?pr[0]:ic(r.cat))+'</div><div class="bm"><b>'+esc(r.note||r.cat)+'</b><small>'+esc(r.cat)+" · day "+r.day+" monthly"+(r.inc>0?" · +"+r.inc+(r.incT==="a"?"":"%")+"/"+(r.every===12?"yr":r.every+"mo"):"")+'</small></div><div class="br"><b class="'+(r.type==="inc"?"inc":"exp")+'">'+fmt(r.amt)+'</b><span class="chip '+cl+'">'+lab+'</span></div><button data-rd="'+r.id+'" aria-label="Remove">✕</button></div>'}).join(""):'<div class="empty">Nothing recurring yet. Tap a bill above to start.</div>';
   var ks=Object.keys(S.cb);
   $("bList").innerHTML=ks.length?ks.map(function(c){var L=S.cb[c],sp=by[c]||0,p=Math.min(100,sp/L*100);return '<div class="cat" style="margin-top:10px">'+ic(c)+" "+esc(c)+'<span>'+fmt(sp)+" / "+fmt(L)+'</span></div><div class="bar"><i style="width:'+p+'%;background:'+(sp>L?"var(--exp)":p>=(S.thr||80)?"#f59e0b":"var(--inc)")+'"></i></div>'}).join(""):'<div class="empty">No category budgets yet</div>';
 }
@@ -351,6 +371,26 @@ $("csv").onclick=function(){
 };
 $("prt").onclick=function(){$("sov").classList.remove("on");setTimeout(function(){window.print()},250)};
 autoRec();
+var PRE=[["⚡","Electricity Bill","Bills"],["🏠","Rent","Housing"],["🔥","Gas Bill","Bills"],["🚐","Van Fee","Transport"],["🎓","School Fee","School fees"],["⛽","Petrol","Transport"],["💧","Water Bill","Bills"],["🌐","Internet","Bills"],["📱","Mobile Bill","Bills"],["📺","Subscription","Bills"],["🛡️","Insurance","Insurance"],["🏦","Loan Installment","Debt"],["🧹","Maintenance","Maintenance Costs"],["🛒","Groceries","Food"]];
+function dd(x){return Math.round((new Date(x+"T00:00")-new Date(today()+"T00:00"))/864e5)}
+$("rChips").innerHTML=PRE.map(function(x,i){return '<button type="button" data-p="'+i+'">'+x[0]+" "+x[1]+'</button>'}).join("");
+$("rChips").onclick=function(e){var b=e.target.closest&&e.target.closest("button");if(!b)return;var x=PRE[+b.getAttribute("data-p")];$("rType").value="exp";$("rCat").innerHTML=opts(ALLC);$("rCat").value=ALLC.indexOf(x[2])>-1?x[2]:"Bills";$("rNote").value=x[1];$("rAmt").focus()};
+function notify(t,b,k){try{navigator.serviceWorker.ready.then(function(r){r.showNotification(t,{body:b,tag:k,icon:"icon-192.png",badge:"icon-192.png"})})}catch(e){}}
+function checkDue(){
+  if(!(window.Notification&&Notification.permission==="granted"))return;
+  S.nt=S.nt||{};var rd=S.rd||2,ch=0;
+  function f(k,t,b){if(!S.nt[k]){S.nt[k]=1;ch=1;notify(t,b,k)}}
+  function w(n){return n>0?"in "+n+" day"+(n>1?"s":""):"today"}
+  (S.rec||[]).forEach(function(r){var n=dd(r.next);if(n>=0&&n<=rd)f("r"+r.id+r.next,(r.note||r.cat)+" due "+w(n),fmt(r.amt)+" · "+r.next)});
+  (S.debts||[]).forEach(function(d){var l=d.amt-d.paid;if(l>0&&d.due){var n=dd(d.due);if(n<=rd)f("d"+d.id+d.due,(d.dir==="lent"?d.who+" owes you ":"You owe "+d.who+" ")+fmt(l),n<0?"Overdue since "+d.due:"Due "+w(n))}});
+  if(ch)save();
+}
+function remMsg(){$("remMsg").textContent=!window.Notification?"Notifications are not supported on this device.":Notification.permission==="granted"?"Notifications are on. You'll be reminded when the app is opened.":Notification.permission==="denied"?"Notifications are blocked in your phone settings.":"Tap Enable notifications to get bill and debt reminders."}
+$("remDays").value=String(S.rd||2);remMsg();
+$("remDays").onchange=function(){S.rd=+this.value;save();render();checkDue()};
+$("remBtn").onclick=function(){if(!window.Notification)return remMsg();Notification.requestPermission().then(function(){remMsg();if(Notification.permission==="granted"){notify("Reminders are on","You'll be notified before bills and debts are due.","welcome");checkDue()}})};
+setInterval(checkDue,30*60*1000);
+document.addEventListener("visibilitychange",function(){if(!document.hidden){autoRec();checkDue();render()}});
 var TABS=[["home","🏠 Home"],["act","📋 Activity"],["bud","🎯 Budgets"],["debt","💳 Debts"],["rec","🔁 Recurring"],["rep","📊 Reports"]];
 $("tabs").innerHTML=TABS.map(function(t){return '<button type="button" data-t="'+t[0]+'">'+t[1]+'</button>'}).join("");
 function tab(t){document.querySelector("main").setAttribute("data-t",t);document.querySelectorAll("#tabs button").forEach(function(b){var on=b.getAttribute("data-t")===t;b.classList.toggle("on",on);if(on)try{b.scrollIntoView({inline:"center",block:"nearest"})}catch(e){}});try{localStorage.setItem(KEY+"-tab",t)}catch(e){}window.scrollTo(0,0)}
@@ -366,7 +406,7 @@ kvGet("state",function(v){var cur=null;try{cur=localStorage.getItem(KEY)}catch(e
   if(!cur){try{var p=JSON.parse(v.d);if(p&&Array.isArray(p.tx)&&p.tx.length){S=p;try{localStorage.setItem(KEY,v.d)}catch(e){}refresh()}}catch(e){}}});
 kvKeys(function(k){k.filter(function(x){return String(x).indexOf("snap-")===0}).sort().slice(0,-7).forEach(function(x){idb(function(d){try{d.transaction("kv","readwrite").objectStore("kv").delete(x)}catch(e){}})})});
 if(/[?&]add=1/.test(location.search))setTimeout(function(){$("amt").scrollIntoView({block:"center"});$("amt").focus()},400);
-setType("exp");render();
+setType("exp");render();checkDue();
 })();
 </script>
 <script>
