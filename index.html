@@ -114,6 +114,23 @@ body.hid .sens{filter:blur(8px)}
 #fab{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));width:54px;height:54px;border-radius:50%;border:0;background:var(--accent);color:#fff;font-size:28px;padding:0;box-shadow:0 6px 18px rgba(0,0,0,.3);z-index:6}
 .sheet h3{text-transform:none;letter-spacing:0;font-size:13px}
 main[data-t=inv] [data-tab=inv]{display:block}
+
+#login{position:fixed;inset:0;z-index:200;display:none;overflow-y:auto;color:#fff;background:radial-gradient(120% 80% at 0% 0%,#6d28d9 0,transparent 55%),radial-gradient(100% 70% at 100% 100%,#1d4ed8 0,transparent 55%),#070620;padding:max(24px,env(safe-area-inset-top)) 16px max(24px,env(safe-area-inset-bottom))}
+#login.on{display:flex}
+.lc{margin:auto;width:100%;max-width:420px;border-radius:32px;padding:26px 20px 20px;text-align:center;background:rgba(14,11,52,.84);border:1px solid rgba(139,92,246,.55);box-shadow:0 0 60px rgba(99,102,241,.25);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.logo{width:96px;height:auto}
+.lt{font-size:34px;font-weight:800;letter-spacing:-.5px;margin:4px 0 2px}.lt span{background:linear-gradient(90deg,#c084fc,#22d3ee);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ls{margin:0 0 16px;color:#b8b4ec;font-size:16px}
+.lb{border-radius:999px;padding:10px 16px;margin-bottom:14px;background:linear-gradient(90deg,rgba(139,92,246,.45),rgba(34,211,238,.35));border:1px solid rgba(255,255,255,.18)}.lb b{display:block;font-size:18px}.lb span{font-size:14px;color:#e5e3ff}
+.lf{display:flex;align-items:center;gap:14px;text-align:left;border-radius:22px;padding:12px 16px;margin-bottom:10px;background:rgba(10,8,40,.7);border:1px solid rgba(129,140,248,.4)}.lf:focus-within{border-color:#22d3ee;box-shadow:0 0 0 3px rgba(34,211,238,.25)}
+.lf>span{flex:1;min-width:0}.lf b{display:block;font-size:15px;font-weight:600;color:#c7c4f5}
+#login input{width:100%;background:none;border:0;color:#fff;padding:2px 0;font-size:15px;outline:0}#login input::placeholder{color:#8f8bc4}
+.ic{width:22px;height:22px;flex:none;fill:none;stroke:#a5a0f0;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.lf button{background:none;border:0;padding:6px;flex:none}
+.lbt{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0 8px}.lbt button{border-radius:999px;padding:14px;font-weight:700;font-size:16px;color:#fff}
+#lIn{border:0;background:linear-gradient(90deg,#a855f7,#3b82f6)}#lUp{background:rgba(8,6,36,.8);border:2px solid #22d3ee}.lbt button:disabled{opacity:.6}
+#lMsg{min-height:20px;color:#fda4af;font-size:14px;margin:4px 0}
+.lft{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(129,140,248,.3);font-size:12px;color:#c7c4f5}.lft div{display:flex;flex-direction:column;align-items:center;gap:6px}.lft .ic{width:26px;height:26px;stroke:#818cf8}
 </style>
 </head>
 <body>
@@ -187,7 +204,7 @@ main[data-t=inv] [data-tab=inv]{display:block}
   <div class="card" data-tab="inv"><h2>Holdings</h2><div id="iList"></div>
     <h2 style="margin-top:18px">Add holding</h2><div class="row"><input id="iName" placeholder="Stock or fund (e.g. Apple)"></div>
     <div class="row"><input id="iSh" type="number" inputmode="decimal" placeholder="Shares"><input id="iBuy" type="number" inputmode="decimal" placeholder="Buy price"><input id="iNow" type="number" inputmode="decimal" placeholder="Price now"></div>
-    <button class="primary" id="iAdd">Add holding</button><small style="color:var(--muted);display:block;margin-top:8px">You enter prices yourself and tap Update price to track growth. Nothing leaves your device.</small></div>
+    <button class="primary" id="iAdd">Add holding</button><small style="color:var(--muted);display:block;margin-top:8px">You enter prices yourself and tap Update price to track growth. The app never looks prices up online.</small></div>
 
   <div class="card" data-tab="home"><h2>Insights this month</h2><div id="ins"></div></div>
 
@@ -202,6 +219,7 @@ main[data-t=inv] [data-tab=inv]{display:block}
 <h3>Appearance</h3><div class="sw" id="sw" aria-label="Theme"></div>
 <h3>Language</h3><div class="row"><select id="lang" aria-label="Language"></select></div>
 <h3>Currency</h3><div class="row"><input id="cur" list="curs" placeholder="Currency (search…)" aria-label="Currency"><datalist id="curs"></datalist></div>
+<h3>Account</h3><div class="srow"><span id="acctTxt"></span><button type="button" id="so">Sign out</button></div><small id="syncMsg" style="color:var(--muted)"></small>
 <h3>Profile</h3><input id="uname" placeholder="Your name (optional)">
 <h3>Budget</h3>
 <div class="srow"><span>Warn me when spending reaches</span><select id="thr" style="flex:none;width:auto"><option value="70">70%</option><option value="80">80%</option><option value="90">90%</option></select></div>
@@ -218,21 +236,40 @@ main[data-t=inv] [data-tab=inv]{display:block}
 <h3>Automatic backups · last 7 days</h3><div class="row"><select id="snapSel" aria-label="Backups"></select><button type="button" id="snapRst" style="flex:none">Restore</button></div>
 <button type="button" id="bkRst" class="danger" style="margin-top:10px">Reset all data</button>
 <h3>About</h3>
-<div class="about"><b>Budget Tracker</b> · Version 1.1.0<br>Privacy: your data stays on this device. No account, no ads, no tracking, and nothing is sent to a server.<br>Terms: this app offers general budgeting tools, not financial advice.</div>
+<div class="about"><b>Budget Tracker</b> · Version 1.2.0<br>Privacy: your budget is saved on this device and, when you are signed in, synced to your private account. No ads and no tracking.<br>Terms: this app offers general budgeting tools, not financial advice.</div>
 </div></div></div>
 <div class="ov" id="lock" style="z-index:100;align-items:center;background:var(--page,var(--bg))"><div class="card" style="width:min(320px,90%);text-align:center"><h2 style="color:var(--text);font-size:20px">🔒 Enter PIN</h2><input id="pin2" type="password" inputmode="numeric" maxlength="6" placeholder="PIN" style="text-align:center;margin-bottom:8px"><button type="button" class="primary" id="unl">Unlock</button><small id="pinErr" style="color:var(--exp)"></small></div></div>
 <div class="ov" id="ov"><div class="sheet"><div class="grab"></div><input id="cq" placeholder="Search categories…"><div class="list" id="cl"></div></div></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-u" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+<symbol id="i-a" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"/></symbol>
+<symbol id="i-l" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+<symbol id="i-e" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></symbol>
+<symbol id="i-s" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
+<symbol id="i-c" viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></symbol>
+<symbol id="i-z" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></symbol></defs></svg>
+<div id="login" role="dialog" aria-modal="true" aria-label="Sign in"><div class="lc">
+<svg class="logo" viewBox="0 0 120 96" aria-hidden="true"><defs><linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c084fc"/><stop offset="1" stop-color="#6366f1"/></linearGradient></defs><rect x="30" y="6" width="44" height="40" rx="5" fill="#4ade80" transform="rotate(-8 52 26)"/><rect x="40" y="2" width="44" height="40" rx="5" fill="#22c55e" transform="rotate(6 62 22)"/><rect x="8" y="30" width="86" height="58" rx="14" fill="url(#lg1)"/><rect x="14" y="36" width="74" height="46" rx="10" fill="none" stroke="#fff" stroke-opacity=".5" stroke-dasharray="4 3"/><circle cx="88" cy="68" r="26" fill="#1e1b4b" stroke="#6366f1" stroke-width="3"/><path d="M76 78V66M85 78V60M94 78V54" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg>
+<div class="lt">Budget <span>Tracker</span></div><p class="ls">Track · Plan · Save · Grow</p>
+<div class="lb"><b>✨ Welcome back</b><span>Sign in to access your budget</span></div>
+<label class="lf"><svg class="ic"><use href="#i-u"/></svg><span><b>Profile name</b><input id="lName" placeholder="Your display name (sign up only)" autocomplete="name" maxlength="30"></span></label>
+<label class="lf"><svg class="ic"><use href="#i-a"/></svg><span><b>Username</b><input id="lUser" placeholder="Choose a unique username" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="20"></span></label>
+<label class="lf"><svg class="ic"><use href="#i-l"/></svg><span><b>Password</b><input id="lPass" type="password" placeholder="Enter your password" autocomplete="current-password"></span><button type="button" id="lEye" aria-label="Show or hide password"><svg class="ic"><use href="#i-e"/></svg></button></label>
+<div id="lMsg" role="alert"></div>
+<div class="lbt"><button type="button" id="lIn">Sign in</button><button type="button" id="lUp">Sign up</button></div>
+<div class="lft"><div><svg class="ic"><use href="#i-s"/></svg>Your data is safe</div><div><svg class="ic"><use href="#i-c"/></svg>Sync across devices</div><div><svg class="ic"><use href="#i-z"/></svg>Access anywhere</div></div>
+</div></div>
 <script>
 (function(){
 var KEY="budget-tracker-v1",COMMON=["Food","Housing","Transport","Bills","Health","Study","Shopping","Fun","Savings","Debt","Maintenance Costs","Party"],PL={single:"Single",couple:"Couple",family:"Family"},PROF={single:["Gym & fitness","Subscriptions","Personal care","Travel","Courses & books","Hobbies"],couple:["Date nights","Gifts","Joint savings","Travel","Home & furniture","Wedding & events"],family:["Groceries","Childcare","Pocket Money","School fees","Kids' activities","Family outings","Insurance","Elder care","Home & repairs"]},INCG=[["Earned",["Salary","Freelance","Business","Bonus"]],["Passive",["Investment","Interest","Rental"]],["Other",["Gift","Refund","Other"]]],CG=[["Essentials",["Food","Groceries","Housing","Bills","Energy & utilities","Phone & internet","Transport","Health","Insurance","Maintenance Costs","Home & repairs"]],["Lifestyle",["Shopping","Clothing","Coffee & drinks","Fun","Party","Subscriptions","Travel","Hobbies","Personal care","Gym & fitness","Pets","Gifts"]],["Money",["Savings","Emergency fund","Investments","Debt","Taxes","Donations"]],["Education",["Study","Courses & books","School fees"]],["Family & couple",["Date nights","Joint savings","Home & furniture","Wedding & events","Childcare","Pocket Money","Kids' activities","Family outings","Elder care"]]],INC=[].concat.apply([],INCG.map(function(g){return g[1]}));
 var S={tx:[],limit:0},type="exp";
-try{var raw=localStorage.getItem(KEY);if(raw){var p=JSON.parse(raw);if(p&&Array.isArray(p.tx))S=p}}catch(e){}
+var U="",UK=KEY,P="",CL={},pt;
 var DB=null;
 function idb(cb){if(DB)return cb(DB);try{var r=indexedDB.open("budget-db",1);r.onupgradeneeded=function(){r.result.createObjectStore("kv")};r.onsuccess=function(){DB=r.result;cb(DB)}}catch(e){}}
 function kvSet(k,v){idb(function(d){try{d.transaction("kv","readwrite").objectStore("kv").put(v,k)}catch(e){}})}
 function kvGet(k,cb){idb(function(d){try{var q=d.transaction("kv").objectStore("kv").get(k);q.onsuccess=function(){cb(q.result)};q.onerror=function(){cb()}}catch(e){cb()}})}
 function kvKeys(cb){idb(function(d){try{var q=d.transaction("kv").objectStore("kv").getAllKeys();q.onsuccess=function(){cb(q.result||[])};q.onerror=function(){cb([])}}catch(e){cb([])}})}
-function save(){var j=JSON.stringify(S);try{localStorage.setItem(KEY,j)}catch(e){}kvSet("state",{t:Date.now(),d:j});var n=new Date();kvSet("snap-"+n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0"),j)}
+function save(){if(!U)return;S._mt=Date.now();var j=JSON.stringify(S);try{localStorage.setItem(UK,j)}catch(e){}kvSet(P+"state",{t:Date.now(),d:j});var n=new Date();kvSet(P+"snap-"+n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0"),j);push(j)}
 var $=function(id){return document.getElementById(id)};
 var PAL=["#2563eb","#f59e0b","#10b981","#ef4444","#8b5cf6","#ec4899","#14b8a6","#f97316","#64748b"];
 var IC={Food:"🍽️",Housing:"🏠",Transport:"🚌",Bills:"💡",Health:"🩺",Study:"📚",Shopping:"🛍️",Fun:"🎉",Savings:"🐷",Debt:"💳","Maintenance Costs":"🛠️",Party:"🥳","Pocket Money":"💵","Gym & fitness":"🏋️",Subscriptions:"📺","Personal care":"💆",Travel:"✈️","Courses & books":"🎓",Hobbies:"🎨","Date nights":"🍷",Gifts:"🎁",Gift:"🎁","Joint savings":"💞","Home & furniture":"🛋️","Wedding & events":"💍",Groceries:"🛒",Childcare:"🧸","School fees":"🏫","Kids' activities":"⚽","Family outings":"🎡",Insurance:"🛡️","Elder care":"🧓","Home & repairs":"🔧",Salary:"💼",Freelance:"💻",Business:"🏢",Bonus:"🎉",Investment:"📈",Investments:"📈",Interest:"🏦",Rental:"🏘️",Refund:"↩️",Pets:"🐾",Clothing:"👕","Coffee & drinks":"☕","Energy & utilities":"⚡","Phone & internet":"📱","Emergency fund":"🛡️",Taxes:"🧾",Donations:"🤲"};
@@ -436,13 +473,11 @@ function tab(t){document.querySelector("main").setAttribute("data-t",t);document
 $("tabs").onclick=function(e){var b=e.target.closest&&e.target.closest("button");if(b)tab(b.getAttribute("data-t"))};
 var t0="home";try{t0=localStorage.getItem(KEY+"-tab")||"home"}catch(e){}
 tab(/[?&]add=1/.test(location.search)?"home":t0);
-function snapList(){kvKeys(function(k){k=k.filter(function(x){return String(x).indexOf("snap-")===0}).sort().reverse();$("snapSel").innerHTML=k.length?k.map(function(x){return "<option value=\""+x+"\">"+String(x).slice(5)+"</option>"}).join(""):"<option value=\"\">No backups yet</option>"})}
+function snapList(){kvKeys(function(k){k=k.filter(function(x){return String(x).indexOf(P+"snap-")===0}).sort().reverse();$("snapSel").innerHTML=k.length?k.map(function(x){return "<option value=\""+x+"\">"+String(x).slice(P.length+5)+"</option>"}).join(""):"<option value=\"\">No backups yet</option>"})}
 $("gear").addEventListener("click",snapList);
-$("snapRst").onclick=function(){var k=$("snapSel").value;if(!k||!confirm("Replace your current data with the backup from "+k.slice(5)+"?"))return;kvGet(k,function(j){try{var p=JSON.parse(j);if(!p||!Array.isArray(p.tx))throw 0;S=p;save();refresh();$("bkMsg").textContent="Restored backup from "+k.slice(5)+"."}catch(e){$("bkMsg").textContent="That backup could not be restored."}})};
+$("snapRst").onclick=function(){var k=$("snapSel").value;if(!k||!confirm("Replace your current data with the backup from "+k.slice(P.length+5)+"?"))return;kvGet(k,function(j){try{var p=JSON.parse(j);if(!p||!Array.isArray(p.tx))throw 0;S=p;save();refresh();$("bkMsg").textContent="Restored backup from "+k.slice(P.length+5)+"."}catch(e){$("bkMsg").textContent="That backup could not be restored."}})};
 try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
-kvGet("state",function(v){var cur=null;try{cur=localStorage.getItem(KEY)}catch(e){}
-  if(!v){if(cur)kvSet("state",{t:Date.now(),d:cur});return}
-  if(!cur){try{var p=JSON.parse(v.d);if(p&&Array.isArray(p.tx)&&p.tx.length){S=p;try{localStorage.setItem(KEY,v.d)}catch(e){}refresh()}}catch(e){}}});
+
 kvKeys(function(k){k.filter(function(x){return String(x).indexOf("snap-")===0}).sort().slice(0,-7).forEach(function(x){idb(function(d){try{d.transaction("kv","readwrite").objectStore("kv").delete(x)}catch(e){}})})});
 if(/[?&]add=1/.test(location.search))setTimeout(function(){$("amt").scrollIntoView({block:"center"});$("amt").focus()},400);
 
@@ -530,6 +565,75 @@ function recs(){
   $("rList").innerHTML=S.rec.length?'<div class="rsum"><div><small>Monthly bills</small><b class="exp">'+fmt(mo)+'</b></div><div><small>Monthly income</small><b class="inc">'+fmt(mi)+'</b></div></div>'+sec("Bills &amp; expenses","exp")+sec("Income","inc"):'<div class="empty">Nothing recurring yet. Tap a bill below to start.</div>';
 }
 $("rFilt").onclick=function(e){var b=e.target.closest&&e.target.closest("button");if(!b)return;rf=b.getAttribute("data-rf");recs()};
+
+var FB={apiKey:"AIzaSyAtvSAuHtTTlsuWq7XC-uaSedij7YWNaeA",authDomain:"budget-tracker-sheece.firebaseapp.com",projectId:"budget-tracker-sheece",storageBucket:"budget-tracker-sheece.firebasestorage.app",messagingSenderId:"780118932664",appId:"1:780118932664:web:ebab65a2e179b72b17c84d"},CFG=FB.apiKey.indexOf("YOUR_")!==0,DOM="@bt-user.app",SDK="https://www.gstatic.com/firebasejs/10.14.1/";
+function showLogin(){$("login").classList.add("on")}
+function stat(m){$("syncMsg").textContent=m}
+function lerr(m){$("lMsg").textContent=m}
+function storeLocal(){var j=JSON.stringify(S);try{localStorage.setItem(UK,j)}catch(e){}kvSet(P+"state",{t:Date.now(),d:j})}
+function enter(uid,un){
+  U=uid;UK=uid==="local"?KEY:KEY+"-u-"+uid;P=uid==="local"?"":uid+":";
+  var raw=null;S={tx:[],limit:0};
+  try{raw=localStorage.getItem(UK);var p=JSON.parse(raw);if(p&&Array.isArray(p.tx))S=p}catch(e){}
+  if(uid!=="local")try{localStorage.setItem(KEY+"-last",JSON.stringify({uid:uid,un:un}))}catch(e){}
+  $("login").classList.remove("on");$("lPass").value="";lerr("");
+  $("acctTxt").textContent=uid==="local"?"Cloud sync is off":"Signed in as "+un;$("so").style.display=uid==="local"?"none":"";stat("");
+  $("remDays").value=String(S.rd||2);autoRec();refresh();
+  if(S.pin)$("lock").classList.add("on");
+  if(!raw)kvGet(P+"state",function(v){try{var p=JSON.parse(v.d);if(p&&Array.isArray(p.tx)&&p.tx.length){S=p;refresh()}}catch(e){}});
+}
+function leave(){U="";clearTimeout(pt);CL.ref=null;if(CL.un){CL.un();CL.un=null}try{localStorage.removeItem(KEY+"-last")}catch(e){}S={tx:[],limit:0};$("lock").classList.remove("on");$("sov").classList.remove("on");refresh();showLogin()}
+function push(j,now){
+  if(!(CL.db&&CL.ref&&U&&U!=="local"))return;clearTimeout(pt);stat("Saving…");
+  pt=setTimeout(function(){CL.F.setDoc(CL.ref,{json:j,t:S._mt||Date.now()}).then(function(){stat("Synced")},function(){stat("Offline: changes sync when you’re back online")})},now?0:1200)}
+function sub(uid){
+  if(CL.un){CL.un();CL.un=null}
+  CL.ref=CL.F.doc(CL.db,"users",uid,"data","main");
+  CL.un=CL.F.onSnapshot(CL.ref,function(sn){
+    if(sn.metadata.hasPendingWrites)return;
+    var d=sn.exists()?sn.data():null,mine=S._mt||0;
+    if(!d){push(JSON.stringify(S),1);return}
+    if(d.t>mine){try{var p=JSON.parse(d.json);if(p&&Array.isArray(p.tx)){S=p;storeLocal();refresh()}}catch(e){}stat("Synced")}
+    else if(d.t<mine)push(JSON.stringify(S),1);else stat("Synced");
+  },function(){stat("Offline: showing the copy saved on this device")});
+}
+function authChanged(u){
+  if(!u){if(U&&U!=="local")leave();else if(!U)showLogin();return}
+  var un=(u.email||"").split("@")[0];
+  if(U!==u.uid)enter(u.uid,un);
+  if(CL.pend){var q=CL.pend;CL.pend=null;
+    if(q.mig)try{var lp=JSON.parse(localStorage.getItem(KEY));if(lp&&Array.isArray(lp.tx)){S=lp;localStorage.setItem(KEY+"-migrated","1")}}catch(e){}
+    S.name=q.name;save();refresh()}
+  sub(u.uid);
+}
+function initCloud(){
+  Promise.all([import(SDK+"firebase-app.js"),import(SDK+"firebase-auth.js"),import(SDK+"firebase-firestore.js")]).then(function(m){
+    var app=m[0].initializeApp(FB);CL.A=m[1];CL.F=m[2];CL.auth=m[1].getAuth(app);
+    try{CL.db=m[2].initializeFirestore(app,{localCache:m[2].persistentLocalCache()})}catch(e){CL.db=m[2].getFirestore(app)}
+    m[1].onAuthStateChanged(CL.auth,authChanged);
+  }).catch(function(){if(!U){showLogin();lerr("You’re offline. Connect to the internet to sign in.")}else stat("Offline: showing the copy saved on this device")});
+}
+window.addEventListener("online",function(){if(CFG&&!CL.A)initCloud()});
+function AE(c,up){return{"auth/email-already-in-use":"That username is taken. Try another one.","auth/invalid-credential":"Wrong username or password.","auth/user-not-found":"Wrong username or password.","auth/wrong-password":"Wrong username or password.","auth/network-request-failed":"No connection. Check your internet and try again.","auth/too-many-requests":"Too many attempts. Wait a minute and try again.","auth/weak-password":"Choose a password with at least 6 characters.","auth/operation-not-allowed":"Email/password sign-in is switched off in your Firebase project."}[c]||"Something went wrong. Please try again."}
+function busy(f){$("lIn").disabled=$("lUp").disabled=!!f}
+function lgo(up){
+  var u=$("lUser").value.trim().toLowerCase(),pw=$("lPass").value,nm=$("lName").value.trim();lerr("");
+  if(!CL.A)return lerr(CFG?"Can’t reach the sign-in service. Check your connection and try again.":"Sign-in isn’t set up yet.");
+  if(up&&!nm){$("lName").focus();return lerr("Enter a profile name.")}
+  if(!/^[a-z0-9._-]{3,20}$/.test(u)){$("lUser").focus();return lerr("Username: 3 to 20 letters, numbers, dots, dashes or underscores.")}
+  if(pw.length<6){$("lPass").focus();return lerr("Password needs at least 6 characters.")}
+  busy(1);
+  if(up){var mig=false;try{mig=!localStorage.getItem(KEY+"-migrated")&&JSON.parse(localStorage.getItem(KEY)).tx.length>0}catch(e){}
+    if(mig)mig=confirm("Move the budget data already on this device into your new account?");
+    CL.pend={name:nm,mig:mig}}
+  (up?CL.A.createUserWithEmailAndPassword(CL.auth,u+DOM,pw):CL.A.signInWithEmailAndPassword(CL.auth,u+DOM,pw)).then(function(){busy(0)},function(e){CL.pend=null;busy(0);lerr(AE(e.code,up))});
+}
+$("lIn").onclick=function(){lgo(false)};$("lUp").onclick=function(){lgo(true)};
+$("lPass").onkeydown=function(e){if(e.key==="Enter")lgo(false)};
+$("lEye").onclick=function(){var p=$("lPass");p.type=p.type==="password"?"text":"password"};
+$("so").onclick=function(){if(!confirm("Sign out of this account?"))return;if(CL.A&&CL.auth)CL.A.signOut(CL.auth).catch(function(){});leave()};
+var last=null;try{last=JSON.parse(localStorage.getItem(KEY+"-last"))}catch(e){}
+if(!CFG)enter("local","");else{if(last&&last.uid)enter(last.uid,last.un);else showLogin();initCloud()}
 setType("exp");render();checkDue();
 })();
 </script>

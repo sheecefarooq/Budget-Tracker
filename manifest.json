@@ -1,7 +1,7 @@
 {
   "name": "Budget Tracker",
   "short_name": "Budget",
-  "description": "Track income, expenses, bills, debts, goals and investments. Your data stays on your device.",
+  "description": "Track income, expenses, bills, debts, goals and investments. Sign in to sync your budget across devices.",
   "id": "./index.html",
   "start_url": "./index.html",
   "scope": "./",
