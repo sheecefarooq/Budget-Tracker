@@ -141,6 +141,23 @@ main[data-t=inv] [data-tab=inv]{display:block}
 .dbt{margin-top:14px;padding:12px;border-radius:14px;background:rgba(127,127,127,.1);cursor:pointer}
 .dh2{display:flex;justify-content:space-between;align-items:baseline;font-weight:700;font-size:14px;margin-bottom:6px}.dh2 small{color:var(--accent);font-weight:600}
 .dr{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:14px}.dr b{font-size:15px}.dbt>small{display:block;margin-top:6px;color:var(--muted);font-size:12px}
+:root[data-theme="light"]{--hero:linear-gradient(135deg,#3b82f6,#7c3aed 55%,#db2777)}
+:root[data-theme="dark"]{--hero:linear-gradient(135deg,#38bdf8,#7c3aed 55%,#db2777)}
+:root[data-theme="sky"]{--hero:linear-gradient(135deg,#38bdf8,#6366f1 55%,#ec4899)}
+:root[data-theme="ocean"]{--hero:linear-gradient(135deg,#22d3ee,#2563eb 55%,#7c3aed)}
+:root[data-theme="sunset"]{--hero:linear-gradient(135deg,#fb923c,#f43f5e 55%,#a21caf)}
+:root[data-theme="forest"]{--hero:linear-gradient(135deg,#34d399,#059669 55%,#0e7490)}
+:root[data-theme="aurora"]{--hero:linear-gradient(135deg,#818cf8,#9333ea 55%,#ec4899)}
+:root[data-theme="magblue"]{--hero:linear-gradient(135deg,#e879f9,#6366f1 55%,#2563eb)}
+:root[data-theme="blue"]{--hero:linear-gradient(135deg,#38bdf8,#2563eb 55%,#6366f1)}
+:root[data-theme="red"]{--hero:linear-gradient(135deg,#fb7185,#e11d48 55%,#9f1239)}
+:root[data-theme="emerald"]{--hero:linear-gradient(135deg,#6ee7b7,#10b981 55%,#0f766e)}
+:root[data-theme="midnight"]{--hero:linear-gradient(135deg,#38bdf8,#4f46e5 55%,#7e22ce)}
+:root[data-theme="rose"]{--hero:linear-gradient(135deg,#f9a8d4,#db2777 55%,#9d174d)}
+.hero{background:var(--hero,linear-gradient(135deg,#38bdf8,#7c3aed 55%,#db2777));border:0;border-radius:22px;padding:18px 18px 16px;box-shadow:0 8px 24px rgba(0,0,0,.28)}
+.hero .big{margin:4px 0 10px}.hero .big b{font-size:34px;line-height:1.1}
+.hero .hl button{background:rgba(255,255,255,.22);padding:8px 14px;border-radius:99px;font-size:16px}
+.hc{background:rgba(255,255,255,.22)}
 </style>
 </head>
 <body>
@@ -533,8 +550,8 @@ function hdr(m,exp){
   var a=0,b=0,n=0,inc=0,tot=0,y=+m.slice(0,4),mo=+m.slice(5,7),pk=ds(new Date(y,mo-2,1)).slice(0,7),pe=0,ob={},hasA=(S.acc||[]).length>0;
   (S.debts||[]).forEach(function(d){var l=d.amt-d.paid;if(l>0){n++;if(d.dir==="lent")a+=l;else b+=l}});
   (S.acc||[]).forEach(function(x){ob[x.id]=x.open||0});
-  S.tx.forEach(function(t){var v=t.type==="inc"?t.amt:-t.amt;if(t.type==="exp"&&t.date.slice(0,7)===pk)pe+=t.amt;if(t.type==="inc"&&t.date.slice(0,7)===m)inc+=t.amt;if(hasA){if(t.acc in ob)ob[t.acc]+=v}else tot+=v});
-  if(hasA)(S.acc||[]).forEach(function(x){tot+=ob[x.id]});
+  S.tx.forEach(function(t){var v=t.type==="inc"?t.amt:-t.amt;if(t.type==="exp"&&t.date.slice(0,7)===pk)pe+=t.amt;if(t.type==="inc"&&t.date.slice(0,7)===m)inc+=t.amt;tot+=v});
+  (S.acc||[]).forEach(function(x){tot+=x.open||0});
   $("hTot").textContent=fmt(tot);$("hSp").textContent="Spent "+fmt(exp)+" this month";
   $("hLent").textContent=fmt(a);$("hOwe").textContent=fmt(b);
   $("hNet").textContent=n?(n+" open debt"+(n>1?"s":"")+" · net "+(a>=b?"+":"−")+fmt(Math.abs(a-b))):"No open debts";
