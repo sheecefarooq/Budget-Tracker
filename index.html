@@ -131,6 +131,7 @@ main[data-t=inv] [data-tab=inv]{display:block}
 #lIn{border:0;background:linear-gradient(90deg,#a855f7,#3b82f6)}#lUp{background:rgba(8,6,36,.8);border:2px solid #22d3ee}.lbt button:disabled{opacity:.6}
 #lMsg{min-height:20px;color:#fda4af;font-size:14px;margin:4px 0}
 .lft{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(129,140,248,.3);font-size:12px;color:#c7c4f5}.lft div{display:flex;flex-direction:column;align-items:center;gap:6px}.lft .ic{width:26px;height:26px;stroke:#818cf8}
+.stat .sens{display:block}.hsub{display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;margin-top:12px;padding-top:10px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}.hsub b{color:var(--text)}.hsub button{margin-left:auto;padding:4px 10px;font-size:14px}
 </style>
 </head>
 <body>
@@ -142,14 +143,12 @@ main[data-t=inv] [data-tab=inv]{display:block}
   <div id="hi"></div>
   <div class="card" id="due" data-tab="home" style="display:none;border-color:var(--accent)"></div>
   
-  <div class="card hero" data-tab="home">
-    <div class="hl"><div class="stat"><small>Balance</small></div><button type="button" id="eye" aria-label="Show or hide balances">👁</button></div>
-    <div class="sens big"><b id="sBal">0</b></div><div class="hd" id="hDelta"></div>
-    <div class="hg"><div class="stat"><small>Income</small><b id="sInc">0</b></div><div class="stat"><small>Spent</small><b id="sExp">0</b></div><div><small>Lent</small><b id="hLent">0</b></div><div><small>Owed</small><b id="hOwe">0</b></div></div>
+  <div class="card" data-tab="home"><div class="grid">
+    <div class="stat"><small>Income</small><span class="sens"><b class="inc" id="sInc">0</b></span></div>
+    <div class="stat"><small>Spent</small><span class="sens"><b class="exp" id="sExp">0</b></span></div>
+    <div class="stat"><small>Balance</small><span class="sens"><b id="sBal">0</b></span></div>
   </div>
-
-  <div class="card" data-tab="home"><div class="ahd"><h2>Accounts</h2><b class="sens" id="accTot"></b></div><div class="acc" id="accList"></div>
-    <div class="row" style="margin-top:10px"><input id="aName" list="accn" placeholder="Account name (e.g. Cash)"><datalist id="accn"><option>Cash</option><option>Bank</option><option>Savings</option><option>Credit card</option><option>PayPal</option></datalist><input id="aBal" type="number" inputmode="decimal" placeholder="Starting balance"><button type="button" id="aAdd" style="flex:none">Add</button></div></div>
+  <div class="hsub"><span id="hDelta"></span><span>Lent <b class="sens" id="hLent">0</b></span><span>Owed <b class="sens" id="hOwe">0</b></span><button type="button" id="eye" aria-label="Show or hide balances">👁</button></div></div>
 
   <div class="card" data-tab="bud">
     <h2>Monthly spending limit</h2>
@@ -206,6 +205,9 @@ main[data-t=inv] [data-tab=inv]{display:block}
     <div class="row"><input id="iSh" type="number" inputmode="decimal" placeholder="Shares"><input id="iBuy" type="number" inputmode="decimal" placeholder="Buy price"><input id="iNow" type="number" inputmode="decimal" placeholder="Price now"></div>
     <button class="primary" id="iAdd">Add holding</button><small style="color:var(--muted);display:block;margin-top:8px">You enter prices yourself and tap Update price to track growth. The app never looks prices up online.</small></div>
 
+  <div class="card" data-tab="home"><div class="ahd"><h2>Accounts</h2><b class="sens" id="accTot"></b></div><div class="acc" id="accList"></div>
+    <div class="row" style="margin-top:10px"><input id="aName" list="accn" placeholder="Account name (e.g. Cash)"><datalist id="accn"><option>Cash</option><option>Bank</option><option>Savings</option><option>Credit card</option><option>PayPal</option></datalist></div><div class="row"><input id="aBal" type="number" inputmode="decimal" placeholder="Starting balance"><button type="button" id="aAdd" style="flex:none;padding:0 22px">Add account</button></div></div>
+
   <div class="card" data-tab="home"><h2>Insights this month</h2><div id="ins"></div></div>
 
   <div class="card" data-tab="rep"><h2>Last 6 months · green income, red spending</h2><div id="trend"></div></div>
@@ -219,7 +221,7 @@ main[data-t=inv] [data-tab=inv]{display:block}
 <h3>Appearance</h3><div class="sw" id="sw" aria-label="Theme"></div>
 <h3>Language</h3><div class="row"><select id="lang" aria-label="Language"></select></div>
 <h3>Currency</h3><div class="row"><input id="cur" list="curs" placeholder="Currency (search…)" aria-label="Currency"><datalist id="curs"></datalist></div>
-<h3>Account</h3><div class="srow"><span id="acctTxt"></span><button type="button" id="so">Sign out</button></div><small id="syncMsg" style="color:var(--muted)"></small>
+<h3>Account</h3><div class="srow"><span id="acctTxt"></span><button type="button" id="so">Log out</button></div><small id="syncMsg" style="color:var(--muted)"></small>
 <h3>Profile</h3><input id="uname" placeholder="Your name (optional)">
 <h3>Budget</h3>
 <div class="srow"><span>Warn me when spending reaches</span><select id="thr" style="flex:none;width:auto"><option value="70">70%</option><option value="80">80%</option><option value="90">90%</option></select></div>
@@ -236,7 +238,7 @@ main[data-t=inv] [data-tab=inv]{display:block}
 <h3>Automatic backups · last 7 days</h3><div class="row"><select id="snapSel" aria-label="Backups"></select><button type="button" id="snapRst" style="flex:none">Restore</button></div>
 <button type="button" id="bkRst" class="danger" style="margin-top:10px">Reset all data</button>
 <h3>About</h3>
-<div class="about"><b>Budget Tracker</b> · Version 1.2.0<br>Privacy: your budget is saved on this device and, when you are signed in, synced to your private account. No ads and no tracking.<br>Terms: this app offers general budgeting tools, not financial advice.</div>
+<div class="about"><b>Budget Tracker</b> · Version 1.2.2<br>Privacy: your budget is saved on this device and, when you are logged in, synced to your private account. No ads and no tracking.<br>Terms: this app offers general budgeting tools, not financial advice.</div>
 </div></div></div>
 <div class="ov" id="lock" style="z-index:100;align-items:center;background:var(--page,var(--bg))"><div class="card" style="width:min(320px,90%);text-align:center"><h2 style="color:var(--text);font-size:20px">🔒 Enter PIN</h2><input id="pin2" type="password" inputmode="numeric" maxlength="6" placeholder="PIN" style="text-align:center;margin-bottom:8px"><button type="button" class="primary" id="unl">Unlock</button><small id="pinErr" style="color:var(--exp)"></small></div></div>
 <div class="ov" id="ov"><div class="sheet"><div class="grab"></div><input id="cq" placeholder="Search categories…"><div class="list" id="cl"></div></div></div>
@@ -248,15 +250,15 @@ main[data-t=inv] [data-tab=inv]{display:block}
 <symbol id="i-s" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
 <symbol id="i-c" viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></symbol>
 <symbol id="i-z" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></symbol></defs></svg>
-<div id="login" role="dialog" aria-modal="true" aria-label="Sign in"><div class="lc">
+<div id="login" role="dialog" aria-modal="true" aria-label="Login"><div class="lc">
 <svg class="logo" viewBox="0 0 120 96" aria-hidden="true"><defs><linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c084fc"/><stop offset="1" stop-color="#6366f1"/></linearGradient></defs><rect x="30" y="6" width="44" height="40" rx="5" fill="#4ade80" transform="rotate(-8 52 26)"/><rect x="40" y="2" width="44" height="40" rx="5" fill="#22c55e" transform="rotate(6 62 22)"/><rect x="8" y="30" width="86" height="58" rx="14" fill="url(#lg1)"/><rect x="14" y="36" width="74" height="46" rx="10" fill="none" stroke="#fff" stroke-opacity=".5" stroke-dasharray="4 3"/><circle cx="88" cy="68" r="26" fill="#1e1b4b" stroke="#6366f1" stroke-width="3"/><path d="M76 78V66M85 78V60M94 78V54" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg>
 <div class="lt">Budget <span>Tracker</span></div><p class="ls">Track · Plan · Save · Grow</p>
-<div class="lb"><b>✨ Welcome back</b><span>Sign in to access your budget</span></div>
+<div class="lb"><b>✨ Welcome back</b><span>Login to access your budget</span></div>
 <label class="lf"><svg class="ic"><use href="#i-u"/></svg><span><b>Profile name</b><input id="lName" placeholder="Your display name (sign up only)" autocomplete="name" maxlength="30"></span></label>
 <label class="lf"><svg class="ic"><use href="#i-a"/></svg><span><b>Username</b><input id="lUser" placeholder="Choose a unique username" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="20"></span></label>
 <label class="lf"><svg class="ic"><use href="#i-l"/></svg><span><b>Password</b><input id="lPass" type="password" placeholder="Enter your password" autocomplete="current-password"></span><button type="button" id="lEye" aria-label="Show or hide password"><svg class="ic"><use href="#i-e"/></svg></button></label>
 <div id="lMsg" role="alert"></div>
-<div class="lbt"><button type="button" id="lIn">Sign in</button><button type="button" id="lUp">Sign up</button></div>
+<div class="lbt"><button type="button" id="lIn">Login</button><button type="button" id="lUp">Sign up</button></div>
 <div class="lft"><div><svg class="ic"><use href="#i-s"/></svg>Your data is safe</div><div><svg class="ic"><use href="#i-c"/></svg>Sync across devices</div><div><svg class="ic"><use href="#i-z"/></svg>Access anywhere</div></div>
 </div></div>
 <script>
@@ -577,7 +579,7 @@ function enter(uid,un){
   try{raw=localStorage.getItem(UK);var p=JSON.parse(raw);if(p&&Array.isArray(p.tx))S=p}catch(e){}
   if(uid!=="local")try{localStorage.setItem(KEY+"-last",JSON.stringify({uid:uid,un:un}))}catch(e){}
   $("login").classList.remove("on");$("lPass").value="";lerr("");
-  $("acctTxt").textContent=uid==="local"?"Cloud sync is off":"Signed in as "+un;$("so").style.display=uid==="local"?"none":"";stat("");
+  $("acctTxt").textContent=uid==="local"?"Cloud sync is off":"Logged in as "+un;$("so").style.display=uid==="local"?"none":"";stat("");
   $("remDays").value=String(S.rd||2);autoRec();refresh();
   if(S.pin)$("lock").classList.add("on");
   if(!raw)kvGet(P+"state",function(v){try{var p=JSON.parse(v.d);if(p&&Array.isArray(p.tx)&&p.tx.length){S=p;refresh()}}catch(e){}});
@@ -611,14 +613,14 @@ function initCloud(){
     var app=m[0].initializeApp(FB);CL.A=m[1];CL.F=m[2];CL.auth=m[1].getAuth(app);
     try{CL.db=m[2].initializeFirestore(app,{localCache:m[2].persistentLocalCache()})}catch(e){CL.db=m[2].getFirestore(app)}
     m[1].onAuthStateChanged(CL.auth,authChanged);
-  }).catch(function(){if(!U){showLogin();lerr("You’re offline. Connect to the internet to sign in.")}else stat("Offline: showing the copy saved on this device")});
+  }).catch(function(){if(!U){showLogin();lerr("You’re offline. Connect to the internet to log in.")}else stat("Offline: showing the copy saved on this device")});
 }
 window.addEventListener("online",function(){if(CFG&&!CL.A)initCloud()});
-function AE(c,up){return{"auth/email-already-in-use":"That username is taken. Try another one.","auth/invalid-credential":"Wrong username or password.","auth/user-not-found":"Wrong username or password.","auth/wrong-password":"Wrong username or password.","auth/network-request-failed":"No connection. Check your internet and try again.","auth/too-many-requests":"Too many attempts. Wait a minute and try again.","auth/weak-password":"Choose a password with at least 6 characters.","auth/operation-not-allowed":"Email/password sign-in is switched off in your Firebase project."}[c]||"Something went wrong. Please try again."}
+function AE(c,up){return{"auth/email-already-in-use":"That username is taken. Try another one.","auth/invalid-credential":"Wrong username or password.","auth/user-not-found":"Wrong username or password.","auth/wrong-password":"Wrong username or password.","auth/network-request-failed":"No connection. Check your internet and try again.","auth/too-many-requests":"Too many attempts. Wait a minute and try again.","auth/weak-password":"Choose a password with at least 6 characters.","auth/operation-not-allowed":"Email/password login is switched off in your Firebase project."}[c]||"Something went wrong. Please try again."}
 function busy(f){$("lIn").disabled=$("lUp").disabled=!!f}
 function lgo(up){
   var u=$("lUser").value.trim().toLowerCase(),pw=$("lPass").value,nm=$("lName").value.trim();lerr("");
-  if(!CL.A)return lerr(CFG?"Can’t reach the sign-in service. Check your connection and try again.":"Sign-in isn’t set up yet.");
+  if(!CL.A)return lerr(CFG?"Can’t reach the login service. Check your connection and try again.":"Login isn’t set up yet.");
   if(up&&!nm){$("lName").focus();return lerr("Enter a profile name.")}
   if(!/^[a-z0-9._-]{3,20}$/.test(u)){$("lUser").focus();return lerr("Username: 3 to 20 letters, numbers, dots, dashes or underscores.")}
   if(pw.length<6){$("lPass").focus();return lerr("Password needs at least 6 characters.")}
@@ -631,7 +633,7 @@ function lgo(up){
 $("lIn").onclick=function(){lgo(false)};$("lUp").onclick=function(){lgo(true)};
 $("lPass").onkeydown=function(e){if(e.key==="Enter")lgo(false)};
 $("lEye").onclick=function(){var p=$("lPass");p.type=p.type==="password"?"text":"password"};
-$("so").onclick=function(){if(!confirm("Sign out of this account?"))return;if(CL.A&&CL.auth)CL.A.signOut(CL.auth).catch(function(){});leave()};
+$("so").onclick=function(){if(!confirm("Log out of this account?"))return;if(CL.A&&CL.auth)CL.A.signOut(CL.auth).catch(function(){});leave()};
 var last=null;try{last=JSON.parse(localStorage.getItem(KEY+"-last"))}catch(e){}
 if(!CFG)enter("local","");else{if(last&&last.uid)enter(last.uid,last.un);else showLogin();initCloud()}
 setType("exp");render();checkDue();
