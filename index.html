@@ -221,8 +221,18 @@ html,body{overscroll-behavior-y:contain}
     <label class="srow"><span>Also record in my balance</span><input type="checkbox" id="dTx" checked style="flex:none;width:auto"></label>
     <button class="primary" id="dAdd">Add debt</button><div id="dList"></div></div>
 
-<div class="card" data-tab="rec">
-    <div class="rh"><h2>Recurring</h2><button type="button" id="rNew">+ New</button></div>
+<div class="card" data-tab="rec"><h2>Add recurring</h2>
+    <div class="seg" id="rSeg"><button type="button" class="on" data-v="exp">Expense</button><button type="button" data-v="inc">Income</button></div>
+    <select id="rType"><option value="exp">Expense</option><option value="inc">Income</option></select><select id="rCat"></select>
+    <div class="row"><input type="number" id="rAmt" inputmode="decimal" placeholder="Amount"><input type="number" id="rDay" min="1" max="28" inputmode="numeric" placeholder="Day (1-28)"></div>
+    <div class="row"><button type="button" class="pick" id="rCatBtn"></button><input id="rNote" placeholder="Name (e.g. Rent)"></div>
+    <details class="adv"><summary>Yearly increase (optional)</summary>
+      <div class="row"><input type="number" id="rInc" inputmode="decimal" placeholder="Increase"><select id="rIncT" style="flex:none;width:auto"><option value="p">%</option><option value="a">fixed amount</option></select></div>
+      <div class="row"><select id="rEvery"><option value="1">Every month</option><option value="3">Every 3 months</option><option value="6">Every 6 months</option><option value="12" selected>Every year</option></select></div></details>
+    <button class="primary" id="rAdd">Add recurring</button></div>
+
+  <div class="card" data-tab="rec">
+    <h2>Recurring</h2>
     <div class="rsm" id="rSum"></div><div class="chips" id="rFilt"></div><div id="rList"></div></div>
 
   <div class="card" data-tab="bud"><h2>Category budgets</h2>
@@ -274,19 +284,9 @@ html,body{overscroll-behavior-y:contain}
 <h3>Automatic backups · last 7 days</h3><div class="row"><select id="snapSel" aria-label="Backups"></select><button type="button" id="snapRst" style="flex:none">Restore</button></div>
 <button type="button" id="bkRst" class="danger" style="margin-top:10px">Reset all data</button>
 <h3>About</h3>
-<div class="about"><b>Budget Tracker</b> · Version 1.3.0<br>Privacy: your budget is saved on this device and, when you are logged in, synced to your private account. No ads and no tracking.<br>Terms: this app offers general budgeting tools, not financial advice.</div>
+<div class="about"><b>Budget Tracker</b> · Version 1.3.1<br>Privacy: your budget is saved on this device and, when you are logged in, synced to your private account. No ads and no tracking.<br>Terms: this app offers general budgeting tools, not financial advice.</div>
 </div></div></div>
 <div class="ov" id="lock" style="z-index:100;align-items:center;background:var(--page,var(--bg))"><div class="card" style="width:min(320px,90%);text-align:center"><h2 style="color:var(--text);font-size:20px">🔒 Enter PIN</h2><input id="pin2" type="password" inputmode="numeric" maxlength="6" placeholder="PIN" style="text-align:center;margin-bottom:8px"><button type="button" class="primary" id="unl">Unlock</button><small id="pinErr" style="color:var(--exp)"></small></div></div>
-<div class="ov" id="rov"><div class="sheet" style="max-height:92%"><div class="grab"></div><div class="head"><span style="font-size:18px;font-weight:700">New recurring</span><button type="button" id="rx">Close</button></div><div class="list">
-  <div class="seg" id="rSeg"><button type="button" class="on" data-v="exp">Expense</button><button type="button" data-v="inc">Income</button></div>
-  <select id="rType"><option value="exp">Expense</option><option value="inc">Income</option></select>
-  <div class="row"><input type="number" id="rAmt" inputmode="decimal" placeholder="Amount"></div>
-  <select id="rCat"></select><div class="row"><button type="button" class="pick" id="rCatBtn"></button></div>
-  <div class="row"><input type="number" id="rDay" min="1" max="28" inputmode="numeric" placeholder="Day (1-28)"><input id="rNote" placeholder="Name (e.g. Rent)"></div>
-  <details class="adv"><summary>Yearly increase (optional)</summary>
-    <div class="row"><input type="number" id="rInc" inputmode="decimal" placeholder="Increase"><select id="rIncT" style="flex:none;width:auto"><option value="p">%</option><option value="a">fixed amount</option></select></div>
-    <div class="row"><select id="rEvery"><option value="1">Every month</option><option value="3">Every 3 months</option><option value="6">Every 6 months</option><option value="12" selected>Every year</option></select></div></details>
-  <button class="primary" id="rAdd" style="margin-top:8px">Add recurring</button></div></div></div>
 <div class="ov" id="nov"><div class="sheet" style="max-height:80%"><div class="grab"></div><div class="head"><span style="font-size:18px;font-weight:700">Notifications</span><button type="button" id="nx">Done</button></div><div class="list" id="nl"></div><button type="button" id="nset" style="margin-top:10px">Reminder settings</button></div></div>
 <div class="ov" id="ov"><div class="sheet"><div class="grab"></div><input id="cq" placeholder="Search categories…"><div class="list" id="cl"></div></div></div>
 <div class="ov" id="dlg"><div class="sheet dsheet" role="alertdialog" aria-modal="true"><h3 id="dlgT"></h3><p id="dlgM"></p><input id="dlgI" style="display:none"><div class="dbtn"><button type="button" id="dlgNo">Cancel</button><button type="button" id="dlgYes" class="primary">OK</button></div></div></div>
@@ -487,7 +487,7 @@ $("rAdd").onclick=function(){
   if(!(a>0)){$("rAmt").focus();return}if(!d){$("rDay").focus();return}
   var n=new Date(),f=n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");if(f<today())f=nextM(f);
   S.rec=S.rec||[];S.rec.push({id:nid(),type:$("rType").value,amt:a,cat:$("rCat").value,note:$("rNote").value.trim(),day:d,next:f,inc:Math.max(0,parseFloat($("rInc").value)||0),incT:$("rIncT").value,every:+$("rEvery").value,cnt:0});
-  $("rAmt").value="";$("rDay").value="";$("rNote").value="";$("rInc").value="";autoRec();save();render();$("rov").classList.remove("on");
+  $("rAmt").value="";$("rDay").value="";$("rNote").value="";$("rInc").value="";autoRec();save();render();
 };
 $("rList").onclick=function(e){var b=e.target.closest&&e.target.closest("button"),id=b&&b.getAttribute("data-rd");if(id)ask({t:"Stop this recurring item?",m:"Past entries stay in your history.",ok:"Stop it",danger:1},function(){S.rec=S.rec.filter(function(x){return String(x.id)!==id});save();render()})};
 $("bSet").onclick=function(){var v=parseFloat($("bAmt").value)||0;S.cb=S.cb||{};if(v>0)S.cb[$("bCat").value]=v;else delete S.cb[$("bCat").value];$("bAmt").value="";save();render()};
@@ -620,7 +620,7 @@ function recs(){
       return '<div class="rg"><div class="rgh">'+bub(c,ic(c))+'<div class="rm"><b>'+esc(c)+'</b><small>'+g[c].length+(g[c].length>1?" items":" item")+'</small></div><b class="sens">'+fmt(sum(c))+'</b></div>'+g[c].sort(function(a,b){return a.next<b.next?-1:1}).map(function(r){
         var n=dd(r.next),lab=n<=0?"Due today":n===1?"Tomorrow":"In "+n+" days";
         return '<div class="rr"><div class="rm"><b>'+esc(r.note||r.cat)+'</b><small>Monthly · day '+r.day+(r.inc>0?" · +"+r.inc+(r.incT==="a"?"":"%")+(r.every===12?" yearly":" every "+r.every+" mo"):"")+'</small></div><div class="ra"><b class="'+type+' sens">'+fmt(r.amt)+'</b><span class="chip'+(n<=rd?" warn":"")+'">'+lab+'</span></div><button type="button" data-rd="'+r.id+'" aria-label="Remove">✕</button></div>'}).join("")+'</div>'}).join("")}
-  $("rList").innerHTML=S.rec.length?sec("Bills &amp; expenses","exp")+sec("Income","inc"):'<div class="empty">Nothing recurring yet.<br>Tap + New to add rent, bills or salary.</div>';
+  $("rList").innerHTML=S.rec.length?sec("Bills &amp; expenses","exp")+sec("Income","inc"):'<div class="empty">Nothing recurring yet.<br>Use the form above to add rent, bills or salary.</div>';
 }
 $("rFilt").onclick=function(e){var b=e.target.closest&&e.target.closest("button");if(!b)return;rf=b.getAttribute("data-rf");recs()};
 
@@ -634,8 +634,7 @@ $("dlg").onclick=function(e){if(e.target===this&&!dsticky)dclose(false)};$("dlgI
 function updx(){[["rCat","rCatBtn"],["bCat","bCatBtn"]].forEach(function(p){var c=$(p[0]).value||"Other";$(p[1]).innerHTML='<span>'+ic(c)+'</span><span>'+esc(c)+'</span><span>▾</span>'})}
 function rTypeUi(){var v=$("rType").value;$("rCat").innerHTML=v==="inc"?gopt(INCG):ecat();updx();document.querySelectorAll("#rSeg button").forEach(function(b){b.classList.toggle("on",b.getAttribute("data-v")===v)})}
 $("rSeg").onclick=function(e){var b=e.target.closest&&e.target.closest("button");if(!b)return;$("rType").value=b.getAttribute("data-v");rTypeUi()};
-$("rNew").onclick=function(){$("rType").value="exp";rTypeUi();$("rov").classList.add("on")};
-$("rx").onclick=function(){$("rov").classList.remove("on")};$("rov").onclick=function(e){if(e.target===this)this.classList.remove("on")};
+
 $("dView").onclick=function(){tab("debt")};
 function bellUi(){var n=DUEL.length;$("bdg").textContent=n>9?"9+":n||""}
 function nList(){$("nl").innerHTML=DUEL.length?DUEL.map(function(x,i){var d=x[3]==="debt";return '<button type="button" class="nrow" data-i="'+i+'"><span class="bub" style="background:'+cc(d?"Debt":"Bills")+'26">'+(d?"🤝":"🔁")+'</span><span class="rm"><b>'+x[1]+'</b><small>'+x[2]+'</small></span><span>›</span></button>'}).join(""):'<div class="empty">You’re all caught up. Nothing is due soon.</div>'}
