@@ -1,4 +1,40 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Privacy Policy · Budgetlet</title>
-<style>:root{--bg:#ecefea;--text:#1b221f;--muted:#5c6862;--accent:#1f6f5b}@media(prefers-color-scheme:dark){:root{--bg:#161c20;--text:#e7ecea;--muted:#96a19b;--accent:#5fb59c}}
-body{margin:0;background:var(--bg);color:var(--text);font:17px/1.6 "Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif}main{max-width:62ch;margin:0 auto;padding:24px 18px 64px}h1{font-size:28px;margin:12px 0}h2{font-size:18px;margin:28px 0 4px}p{margin:0}a{color:var(--accent)}small{color:var(--muted)}</style></head>
-<body><main><a href="index.html">Back to Budgetlet</a><h1>Privacy Policy</h1><small>Last updated November 4, 2026. Plain-language draft: have it reviewed for your jurisdiction and add a contact address.</small><h2>What we store</h2><p>Your transactions, accounts, goals, debts, holdings and settings. Without an account, this data stays on your device only.</p><h2>Accounts and sync</h2><p>If you sign up, your username (saved as an internal email-style ID), profile name, password and budget data are stored with Google Firebase (Authentication and Firestore) so they can sync between your devices. Passwords are handled by Firebase and never visible to us.</p><h2>What we do not do</h2><p>We show no ads, run no analytics or trackers, and never sell or share your data. Prices for holdings are typed in by you; the app does not look them up online.</p><h2>Your controls</h2><p>Export a backup or CSV, reset all data, or log out from Settings. To delete your account and cloud data, contact the app owner.</p><h2>Notifications and PIN</h2><p>Reminders are generated on your device. Your PIN is stored only as a hash on your device.</p></main></body></html>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark"><title>Privacy Policy · Budgetlet</title>
+<style>:root{--bg:#f4f5f9;--card:#fff;--text:#1c1b2e;--muted:#5f5e78;--accent:#5b3fd6;--line:#e3e2ef}@media(prefers-color-scheme:dark){:root{--bg:#0c0a24;--card:#151235;--text:#ecebff;--muted:#a3a1cf;--accent:#a78bfa;--line:#2a2658}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:720px;margin:0 auto;padding:20px 16px 56px}.back{display:inline-block;margin-bottom:14px;color:var(--accent);text-decoration:none;font-weight:600}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px 20px}
+h1{font-size:28px;line-height:1.2;margin:0 0 6px;letter-spacing:-.4px}.meta{color:var(--muted);font-size:14px;margin:0 0 18px}
+.sum{background:rgba(91,63,214,.08);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:0 0 8px;font-size:15px}
+h2{font-size:18px;margin:26px 0 6px}p,ul{margin:0 0 10px}ul{padding-left:20px}li{margin:3px 0}a{color:var(--accent)}
+footer{margin-top:22px;text-align:center;color:var(--muted);font-size:13px}footer a{margin:0 6px}</style></head>
+<body><main><a class="back" href="index.html">← Back to Budgetlet</a><div class="card">
+<h1>Privacy Policy</h1><p class="meta">Budgetlet · Last updated November 4, 2026</p>
+<p class="sum"><b>In short:</b> your budget is yours. Budgetlet has no ads, no analytics and no trackers, and we never sell or share your data. Everything stays on your device unless you create an account to sync.</p>
+<h2>1. Who we are</h2><p>Budgetlet ("we", "us") is a personal budgeting app for tracking income, expenses, bills, debts, goals and investments. Questions about this policy can be sent to <b>[your contact email]</b>.</p>
+<h2>2. What we collect</h2>
+<ul><li><b>Your budget data:</b> transactions, categories, accounts, bills, debts, savings goals, investment holdings (including prices you type in), limits and app settings such as currency, language and theme.</li>
+<li><b>Account details (only if you sign up):</b> your username, profile name and password. Your username is stored as an internal email-style ID (for example, <i>yourname@bt-user.app</i>); it is not a real mailbox and we do not send email to it.</li>
+<li><b>Security settings:</b> your app PIN, if you set one.</li></ul>
+<p>We do not collect your real name, phone number, contacts, precise location, photos or device identifiers, and we do not connect to your bank.</p>
+<h2>3. Using Budgetlet without an account</h2><p>If you do not log in, your data is stored only on your device, in the app's local storage. We cannot see it, and it is lost if you clear the app's data or uninstall without a backup.</p>
+<h2>4. Accounts and cloud sync</h2><p>If you sign up, your account and budget data are stored with <b>Google Firebase</b> (Authentication and Cloud Firestore) so they sync between your devices. Passwords are handled by Firebase Authentication and are never visible to us. Firebase acts as our service provider and processes data on our behalf under <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener">Google’s Firebase privacy terms</a>; as a result, your data may be stored on servers outside your country. Your cloud budget is tied to your account and is not shown to other users.</p>
+<h2>5. What happens on your device</h2>
+<ul><li><b>PIN:</b> stored only as a hash on your device. It never leaves your device, and we cannot recover it for you.</li>
+<li><b>Reminders and notifications:</b> generated locally on your device. No notification data is sent to us.</li>
+<li><b>Automatic backups:</b> the app keeps recent backups (last 7 days) on your device so you can restore them from Settings.</li>
+<li><b>Offline use:</b> the app saves a copy of its own files on your device so it can open without internet.</li></ul>
+<h2>6. What we do not do</h2>
+<ul><li>No advertising, analytics, or tracking cookies.</li><li>No selling, renting or sharing of your data with advertisers or data brokers.</li><li>No automatic price lookups: investment prices are typed in by you, and the app does not fetch them online.</li></ul>
+<h2>7. How we use your data</h2><p>Only to run the app: to show your budget, keep it in sync across your devices, let you log in, and keep your account secure. We do not use your data for profiling or advertising.</p>
+<h2>8. Your choices and rights</h2>
+<ul><li><b>Access and export:</b> download a backup or CSV any time from Settings.</li>
+<li><b>Correct or delete data:</b> edit or delete any entry, or use "Reset all data" in Settings.</li>
+<li><b>Log out:</b> from Settings. Your data stays safe in your account.</li>
+<li><b>Delete your account and cloud data:</b> email <b>[your contact email]</b> from the address you used to ask, with your username, and we will delete it within a reasonable time.</li></ul>
+<p>Depending on where you live, you may have additional rights under local privacy laws (such as access, correction, deletion and portability). Contact us and we will help.</p>
+<h2>9. Retention and security</h2><p>We keep cloud data for as long as your account exists. Data is transmitted over encrypted connections and protected by Firebase security. No system is perfectly secure, so please choose a strong, unique password and keep your PIN private.</p>
+<h2>10. Children</h2><p>Budgetlet is not directed at children under 13 (or the minimum age in your country), and we do not knowingly collect their data. If you believe a child has created an account, contact us and we will remove it.</p>
+<h2>11. Changes to this policy</h2><p>We may update this policy as the app changes. The "last updated" date above will change, and for significant changes we will make a reasonable effort to notify you in the app.</p>
+<h2>12. Contact</h2><p><b>[your contact email]</b></p>
+</div><footer><a href="terms.html">Terms of Service</a>·<a href="index.html">Open Budgetlet</a></footer></main></body></html>
