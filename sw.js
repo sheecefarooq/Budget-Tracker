@@ -1,4 +1,4 @@
-var CACHE = "budget-tracker-v4";
+var CACHE = "budget-tracker-v5";
 var SHELL = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", function (e) {
