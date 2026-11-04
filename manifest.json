@@ -1,5 +1,5 @@
 {
-  "name": "Budget Tracker",
+  "name": "Budgetlet",
   "short_name": "Budget",
   "description": "Track income, expenses, bills, debts, goals and investments. Sign in to sync your budget across devices.",
   "id": "./index.html",

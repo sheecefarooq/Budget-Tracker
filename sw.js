@@ -1,5 +1,5 @@
-var CACHE = "budget-tracker-v5";
-var SHELL = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png"];
+var CACHE = "budgetlet-v5";
+var SHELL = ["./", "./index.html", "./manifest.json", "./privacy.html", "./terms.html", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", function (e) {
   e.waitUntil(caches.open(CACHE).then(function (c) { return c.addAll(SHELL); }).then(function () { return self.skipWaiting(); }));
